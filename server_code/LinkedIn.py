@@ -141,45 +141,106 @@ def little_text(text):
     return "".join(out)
 
 
+def _ready(me, post_id):
+    """(post row, link row) when this person may publish this post now, else (None, fail reply)."""
+    r = C.row_by_id(app_tables.posts, post_id)
+    if r is None or r["owner"] != me:
+        return None, C.fail("That post no longer exists.")
+    if r["status"] == "posted":
+        return None, C.fail("This one is already posted.")
+    text = (r["text"] or "").strip()
+    if not text:
+        return None, C.fail("Write something first.")
+    if len(text) > 3000:
+        return None, C.fail("LinkedIn posts can be up to 3,000 characters.")
+    if not status_for(me).get("connected"):
+        return None, C.fail("Connect LinkedIn first (it expires every 60 days).")
+    if C.rate_limited("li_post", 10, 3600):
+        return None, C.fail("That's a lot of posts in an hour. LinkedIn may limit you: try again later.")
+    return r, _link(me)
+
+
+def _headers(row, content_type="application/json"):
+    h = {"Authorization": "Bearer " + row["token"], "LinkedIn-Version": api_version(), "X-Restli-Protocol-Version": "2.0.0"}
+    if content_type:
+        h["Content-Type"] = content_type
+    return h
+
+
+def _failed(e, row, what="the post"):
+    status = getattr(e, "status", 0)
+    print("linkedin %s failed: %s %r" % (what, status, getattr(e, "content", "")))
+    if status == 401:
+        row["expires_at"] = C.now()
+        return C.fail("LinkedIn says the connection expired. Reconnect and try again.")
+    if status == 403:
+        return C.fail("LinkedIn didn't allow %s (HTTP 403). Your app may need the \"Share on LinkedIn\" product, or reconnect." % what)
+    if status == 429:
+        return C.fail("LinkedIn's daily limit is reached. Post it by hand, or try tomorrow.")
+    if status in (400, 422, 426):
+        return C.fail("LinkedIn refused %s (HTTP %s). Post it by hand; an admin may need to update the API version." % (what, status))
+    return C.fail("LinkedIn didn't take %s (HTTP %s). Your text is safe: post it by hand." % (what, status))
+
+
+def _publish(r, row, content=None):
+    body = {"author": "urn:li:person:" + row["sub"], "commentary": little_text((r["text"] or "").strip()), "visibility": "PUBLIC",
+            "distribution": {"feedDistribution": "MAIN_FEED", "targetEntities": [], "thirdPartyDistributionChannels": []},
+            "lifecycleState": "PUBLISHED", "isReshareDisabledByAuthor": False}
+    if content:
+        body["content"] = content
+    anvil.http.request(POSTS_URL, method="POST", data=json.dumps(body), headers=_headers(row))
+    r.update(status="posted", posted_at=C.now(), li_urn="api:" + C.iso(C.now()), updated=C.now())
+
+
 @anvil.server.callable(require_user=True)
 def li_post(post_id):
     """Publish one of your posts now, as text, through the official Posts API. Called only by a button press."""
     me = C.require_user()
-    r = C.row_by_id(app_tables.posts, post_id)
-    if r is None or r["owner"] != me:
-        return C.fail("That post no longer exists.")
-    if r["status"] == "posted":
-        return C.fail("This one is already posted.")
-    text = (r["text"] or "").strip()
-    if not text:
-        return C.fail("Write something first.")
-    if len(text) > 3000:
-        return C.fail("LinkedIn posts can be up to 3,000 characters.")
-    st = status_for(me)
-    if not st.get("connected"):
-        return C.fail("Connect LinkedIn first (it expires every 60 days).")
-    if C.rate_limited("li_post", 10, 3600):
-        return C.fail("That's a lot of posts in an hour. LinkedIn may limit you: try again later.")
-    row = _link(me)
-    body = {"author": "urn:li:person:" + row["sub"], "commentary": little_text(text), "visibility": "PUBLIC",
-            "distribution": {"feedDistribution": "MAIN_FEED", "targetEntities": [], "thirdPartyDistributionChannels": []},
-            "lifecycleState": "PUBLISHED", "isReshareDisabledByAuthor": False}
+    r, row = _ready(me, post_id)
+    if r is None:
+        return row
     try:
-        anvil.http.request(POSTS_URL, method="POST", data=json.dumps(body), headers={
-            "Authorization": "Bearer " + row["token"], "Content-Type": "application/json",
-            "LinkedIn-Version": api_version(), "X-Restli-Protocol-Version": "2.0.0"})
+        _publish(r, row)
     except anvil.http.HttpError as e:
-        status = getattr(e, "status", 0)
-        print("linkedin post failed: %s %r" % (status, getattr(e, "content", "")))
-        if status == 401:
-            row["expires_at"] = C.now()
-            return C.fail("LinkedIn says the connection expired. Reconnect and try again.")
-        if status == 429:
-            return C.fail("LinkedIn's daily limit is reached. Copy and post it by hand, or try tomorrow.")
-        if status == 426 or status == 400:
-            return C.fail("LinkedIn refused the post (HTTP %s). Copy and post it by hand; an admin may need to update the API version." % status)
-        return C.fail("LinkedIn didn't take it (HTTP %s). Your text is safe: copy and post it by hand." % status)
-    r.update(status="posted", posted_at=C.now(), li_urn="api:" + C.iso(C.now()), updated=C.now())
+        return _failed(e, row)
+    from . import Studio
+    return C.ok(post=Studio.post_dict(r))
+
+
+DOCS_INIT_URL = "https://api.linkedin.com/rest/documents?action=initializeUpload"
+MAX_DOC = 20 * 1024 * 1024   # LinkedIn takes up to 100 MB / 300 pages; Anvil uploads stay sensible at 20 MB
+
+
+@anvil.server.callable(require_user=True)
+def li_post_document(media, post_id, title=None):
+    """Publish a post with a PDF document attached (a carousel), through the official Documents + Posts APIs:
+    initialize the upload for the member, PUT the PDF to the upload URL, then create the post pointing at the document."""
+    me = C.require_user()
+    r, row = _ready(me, post_id)
+    if r is None:
+        return row
+    data = media.get_bytes() if media is not None else b""
+    if not data.startswith(b"%PDF"):
+        return C.fail("That isn't a PDF. Make the carousel again and retry.")
+    if len(data) > MAX_DOC:
+        return C.fail("The PDF is %.1f MB. Keep carousels under 20 MB (fewer or simpler slides)." % (len(data) / 1048576.0))
+    owner = "urn:li:person:" + row["sub"]
+    try:
+        init = anvil.http.request(DOCS_INIT_URL, method="POST", json=True, headers=_headers(row),
+                                  data=json.dumps({"initializeUploadRequest": {"owner": owner}}))
+        value = (init or {}).get("value") or {}
+        upload_url, doc = value.get("uploadUrl"), value.get("document")
+        if not upload_url or not doc:
+            return C.fail("LinkedIn didn't give an upload address for the document. Try again, or post it by hand.")
+        anvil.http.request(upload_url, method="PUT", data=media, headers={"Authorization": "Bearer " + row["token"]})
+    except anvil.http.HttpError as e:
+        return _failed(e, row, "the PDF upload")
+    title = C.text(title, 120) or (r["text"] or "").strip().split("\n")[0][:120] or "Carousel"
+    try:
+        _publish(r, row, {"media": {"title": title, "id": doc}})
+    except anvil.http.HttpError as e:
+        return _failed(e, row)
+    r["format"] = "carousel"
     from . import Studio
     return C.ok(post=Studio.post_dict(r))
 

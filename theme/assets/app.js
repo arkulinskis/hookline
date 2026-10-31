@@ -212,6 +212,16 @@
     });
   }
   UI.api = function (fn) { return apiCall(false, fn, Array.prototype.slice.call(arguments, 1)); };
+  /* UI.upload(fn, file, ...args): the server function gets the File as Anvil Media first, then args.
+     (Main.py turns the browser File into Media with anvil.js.to_media; locally the harness posts it.) */
+  UI.upload = function (fn, file) {
+    UI._file = file;
+    return send('upload', { fn: fn, args: Array.prototype.slice.call(arguments, 2) }).then(function (res) {
+      UI._file = null;
+      if (res && typeof res === 'object' && res.ok === false) { var err = new Error(res.error || 'That didn\'t work.'); err.uiApi = true; err.expected = true; err.result = res; throw err; }
+      return res;
+    }, function (e) { UI._file = null; throw e; });
+  };
   UI.apiQuiet = function (fn) { return apiCall(true, fn, Array.prototype.slice.call(arguments, 1)); };
   /* Errors nobody caught become a toast, so a failed action is never silent. */
   window.addEventListener('unhandledrejection', function (e) {
@@ -1292,13 +1302,42 @@
     if (i === 0 && n > 1) { c.fillStyle = th.accent; c.font = '600 34px "DM Sans", sans-serif'; c.fillText('Swipe →', P, H - P + 10); }
   }
 
+  /* The carousel as a PDF File (jsPDF), for download or for posting as a LinkedIn document. */
+  function pdfFile(post, car, me) {
+    return HL.loadScript('_/theme/jspdf.umd.min.js', 'jspdf').then(function (lib) {
+      var doc = new lib.jsPDF({ unit: 'px', format: [1080, 1350], orientation: 'portrait', hotfixes: ['px_scaling'] }), cv = document.createElement('canvas');
+      car.slides.forEach(function (s, i) {
+        render(cv, s, i, car.slides.length, THEMES[car.theme] || THEMES.navy, car.handle || me.name);
+        if (i) doc.addPage([1080, 1350], 'portrait');
+        doc.addImage(cv.toDataURL('image/jpeg', 0.9), 'JPEG', 0, 0, 1080, 1350);
+      });
+      var name = (HL.hook(post.text).replace(/[^\w\- ]+/g, '').trim().slice(0, 40).replace(/\s+/g, '-').toLowerCase() || 'carousel') + '.pdf';
+      return new File([doc.output('blob')], name, { type: 'application/pdf' });
+    });
+  }
+  function fromPostOrSaved(post) {
+    return post.carousel && post.carousel.slides && post.carousel.slides.length ? post.carousel : { theme: 'navy', handle: '', slides: fromPost(post.text) };
+  }
+  HL.carouselPdf = function (post, me) { return pdfFile(post, fromPostOrSaved(post), me); };   // also used by the flow test
+  /* Post the carousel through LinkedIn's official Documents API (asks first). Resolves with the posted post, or null. */
+  HL.postCarousel = function (post, me, car) {
+    car = car || fromPostOrSaved(post);
+    return UI.confirm({ title: 'Post with the carousel?', text: 'Hookline makes the ' + car.slides.length + '-slide PDF and posts it on LinkedIn as a document, with your post text above it. This publishes right away.', ok: 'Post now' }).then(function (yes) {
+      if (!yes) return null;
+      UI.toast('Making the PDF and uploading it to LinkedIn…');
+      return pdfFile(post, car, me).then(function (file) { return UI.upload('li_post_document', file, post.id, HL.hook(post.text).slice(0, 120)); })
+        .then(function (r) { UI.toast('Posted on LinkedIn, with the carousel.', 'ok'); if (post.first_comment) HL.copy(post.first_comment, 'First comment copied: paste it under your post.'); return r.post; });
+    });
+  };
+
   UI.page('carousel', { title: 'Carousel', auth: 'user' }, function (view, ctx) {
     var ws = null, post = null, car = null, cur = 0;
     view.innerHTML = '<div class="ui-wrap"><div class="ui-skel" style="height:420px"></div></div>';
     function draw() {
       view.innerHTML = '<div class="ui-wrap"><div class="ui-page-head"><div><div class="eyebrow"><a href="#studio/' + esc(post.id) + '" data-go="studio/' + esc(post.id) + '">← Back to the post</a></div><h1>Carousel</h1>' +
         '<p class="muted">A PDF of square-ish slides (1080×1350). On LinkedIn: Start a post → Add a document → upload it, then paste your text.</p></div>' +
-        '<div class="ui-row"><button class="ui-btn" data-regen>' + UI.icon(HL.ai.has() ? 'sparkle' : 'refresh') + (HL.ai.has() ? 'Slides with AI' : 'Rebuild from post') + '</button><button class="ui-btn gold" data-pdf>' + UI.icon('download') + 'Download PDF</button></div></div>' +
+        '<div class="ui-row"><button class="ui-btn" data-regen>' + UI.icon(HL.ai.has() ? 'sparkle' : 'refresh') + (HL.ai.has() ? 'Slides with AI' : 'Rebuild from post') + '</button><button class="ui-btn' + (canPost() ? '' : ' gold') + '" data-pdf>' + UI.icon('download') + 'Download PDF</button>' +
+        (canPost() ? '<button class="ui-btn gold" data-lipost>' + UI.icon('send') + 'Post on LinkedIn</button>' : post.status === 'posted' ? '<span class="ui-badge good">' + UI.icon('check') + 'Posted</span>' : '') + '</div></div>' +
         '<div class="cr-grid"><div><div class="cr-themes" role="group" aria-label="Theme">' + Object.keys(THEMES).map(function (k) { return '<button data-theme="' + k + '" class="' + (car.theme === k ? 'on' : '') + '"><i style="background:' + THEMES[k].bg + ';box-shadow:inset 0 0 0 4px ' + THEMES[k].accent + '"></i>' + THEMES[k].name + '</button>'; }).join('') + '</div>' +
         '<label class="ui-field" style="margin-bottom:12px"><span>Name on every slide <em>(optional)</em></span><input type="text" data-handle value="' + esc(car.handle || '') + '" placeholder="' + esc(ctx.me.name) + '" maxlength="60"></label>' +
         '<div class="cr-slides">' + car.slides.map(function (s, i) {
@@ -1319,15 +1358,11 @@
     }
     var st = null;
     function persist() { clearTimeout(st); st = setTimeout(function () { UI.apiQuiet('save_post', Object.assign({}, post, { carousel: car, format: 'carousel' })).then(function (r) { post = r.post; }).catch(function () {}); }, 900); }
+    function canPost() { return ws.linkedin && ws.linkedin.connected && post.status !== 'posted'; }
     function pdf(btn) {
-      UI.busy(btn, HL.loadScript('_/theme/jspdf.umd.min.js', 'jspdf').then(function (lib) {
-        var doc = new lib.jsPDF({ unit: 'px', format: [1080, 1350], orientation: 'portrait', hotfixes: ['px_scaling'] }), cv = document.createElement('canvas');
-        car.slides.forEach(function (s, i) {
-          render(cv, s, i, car.slides.length, THEMES[car.theme] || THEMES.navy, car.handle || ctx.me.name);
-          if (i) doc.addPage([1080, 1350], 'portrait');
-          doc.addImage(cv.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, 1080, 1350);
-        });
-        doc.save((HL.hook(post.text).replace(/[^\w\- ]+/g, '').trim().slice(0, 40).replace(/\s+/g, '-').toLowerCase() || 'carousel') + '.pdf');
+      UI.busy(btn, pdfFile(post, car, ctx.me).then(function (file) {
+        var a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = file.name; document.body.appendChild(a); a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 800);
       })).then(function () { UI.toast('PDF downloaded. Upload it as a document on LinkedIn.', 'ok'); }, function () { UI.toast('Couldn\'t make the PDF.', 'error'); });
     }
     view.addEventListener('input', function (e) {
@@ -1347,6 +1382,9 @@
       if (t.closest('[data-next]')) { cur = Math.min(car.slides.length - 1, cur + 1); preview(); return; }
       if (t.closest('[data-add]')) { car.slides.push({ title: 'New slide', body: '' }); cur = car.slides.length - 1; draw(); persist(); return; }
       var pd = t.closest('[data-pdf]'); if (pd) { pdf(pd); return; }
+      var lp = t.closest('[data-lipost]');
+      if (lp) { clearTimeout(st); UI.busy(lp, UI.api('save_post', Object.assign({}, post, { carousel: car, format: 'carousel' })).then(function (r) { post = r.post; return HL.postCarousel(post, ctx.me, car); }))
+        .then(function (p2) { if (p2) { post = p2; draw(); } }); return; }
       var rg = t.closest('[data-regen]');
       if (rg) {
         UI.confirm({ title: 'Replace these slides?', text: HL.ai.has() ? 'The AI writes new slides from your post.' : 'Slides are rebuilt from your post\'s paragraphs.', ok: 'Replace' }).then(function (y) {
@@ -2127,12 +2165,14 @@
     function postModal() {
       if (!post.text.trim()) { UI.toast('Write something first.', 'error'); return; }
       var c = HL.check(post.text), li = ws.linkedin || {}, bad = c.items.filter(function (i) { return i.level === 'bad'; });
+      var hasSlides = post.format === 'carousel' && post.carousel && post.carousel.slides && post.carousel.slides.length > 0;
       var m = UI.modal('<h2>Post it on LinkedIn</h2>' + (bad.length ? '<div class="ui-error" style="margin-bottom:12px">' + esc(bad[0].title) + ': ' + esc(bad[0].text) + '</div>' : '') +
         '<div style="margin-bottom:14px">' + HL.feedCard(post.text, { name: ctx.me.name, headline: headline(), mode: 'desktop', format: post.format }) + '</div>' +
-        (li.connected ? '<p class="small muted">Posts as <b>' + esc(li.name) + '</b> through LinkedIn\'s official API, as plain text. ' + (post.format !== 'text' ? 'Add your ' + esc(HL.FORMATS[post.format][0].toLowerCase()) + ' on LinkedIn afterwards, or use Copy and open instead.' : '') + '</p>' : '') +
+        (li.connected ? '<p class="small muted">Posts as <b>' + esc(li.name) + '</b> through LinkedIn\'s official API. ' + (hasSlides ? 'With the carousel, your ' + post.carousel.slides.length + ' slides go up as a PDF document under the text.' : post.format !== 'text' ? 'Text only: add your ' + esc(HL.FORMATS[post.format][0].toLowerCase()) + ' on LinkedIn afterwards, or use Copy and open instead.' : '') + '</p>' : '') +
         (post.first_comment ? '<p class="small"><b>Then:</b> add your first comment (we\'ll copy it for you).</p>' : '') +
         '<div class="ui-row end" style="margin-top:14px"><button class="ui-btn" data-copyopen>' + UI.icon('copy') + 'Copy and open LinkedIn</button>' +
-        (li.connected ? '<button class="ui-btn gold" data-api>' + UI.icon('send') + 'Post now</button>' : '') + '</div>' +
+        (li.connected && hasSlides ? '<button class="ui-btn gold" data-apicar>' + UI.icon('slides') + 'Post with the carousel</button>' : '') +
+        (li.connected ? '<button class="ui-btn ' + (hasSlides ? '' : 'gold') + '" data-api>' + UI.icon('send') + (hasSlides ? 'Post text only' : 'Post now') + '</button>' : '') + '</div>' +
         (!li.connected && li.configured ? '<p class="small faint" style="margin-top:12px">Want one-click posting? <a href="#voice/linkedin" data-go="voice/linkedin">Connect LinkedIn</a> (official, no password shared).</p>' : ''), { wide: true });
       m.el.addEventListener('click', function (e) {
         if (e.target.closest('[data-copyopen]')) {
@@ -2142,6 +2182,8 @@
           });
           return;
         }
+        var ac = e.target.closest('[data-apicar]');
+        if (ac) { m.close(); save().then(function () { return HL.postCarousel(post, ctx.me); }).then(function (p2) { if (p2) { post = p2; draw(); } }); return; }
         var api = e.target.closest('[data-api]');
         if (api) {
           save().then(function () { return UI.busy(api, UI.api('li_post', post.id)); }).then(function (r) {

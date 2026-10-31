@@ -92,6 +92,10 @@ class Main(MainTemplate):
                 call = anvil.server.call_s if p.get("quiet") else anvil.server.call
                 # Server replies are JSON-friendly (tools/testing/test_server.py checks every one).
                 return json.dumps({"result": call(p["fn"], *(p.get("args") or []))})
+            if kind == "upload":
+                # UI.upload(fn, file, ...): the browser File becomes Anvil Media (streamed, no JSON copy of the bytes)
+                media = anvil.js.to_media(window.UI._file)
+                return json.dumps({"result": anvil.server.call(p["fn"], media, *(p.get("args") or []))})
             if kind in ("login", "signup", "reset", "logout"):
                 return json.dumps({"result": _auth(kind, p)})
             return json.dumps({"error": "Unknown request: %s" % kind})
