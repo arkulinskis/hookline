@@ -424,16 +424,27 @@ db_schema:
     server: full
     title: Users
 metadata:
-  description: 'Hookline: a free LinkedIn writing studio. Hooks that survive the fold, posts in your own voice, a calm calendar
-    and honest analytics.'
+  description: 'A free LinkedIn writing studio: hooks that survive the see-more fold, posts in your own voice, a calm calendar
+    and honest analytics. Optional AI.'
   logo_img: asset:icon-512.png
-  title: Hookline
+  title: 'Hookline: a free LinkedIn writing studio'
 name: Hookline
 native_deps:
-  head_html: "<script src=\"_/theme/legal-kit.js?v=ba7ba462b8\"></script>\n<meta name=\"viewport\" content=\"width=device-width,\
-    \ initial-scale=1, viewport-fit=cover\">\n<meta name=\"theme-color\" content=\"#1e3a5f\">\n<meta name=\"apple-mobile-web-app-capable\"\
-    \ content=\"yes\">\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"\
-    https://fonts.gstatic.com\" crossorigin>\n<link href=\"https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap\"\
+  head_html: "<script src=\"_/theme/legal-kit.js?v=ba7ba462b8\"></script>\n<!-- seo:start (APP_MAKER/seo: edit seo/apps/hookline.json\
+    \ and run seo.py, not here) -->\n<meta name=\"robots\" content=\"index, follow, max-image-preview:large, max-snippet:-1,\
+    \ max-video-preview:-1\">\n<meta name=\"keywords\" content=\"LinkedIn post writer, Taplio alternative, LinkedIn hook generator,\
+    \ LinkedIn content calendar, LinkedIn analytics, write LinkedIn posts, LinkedIn post formatter, personal branding LinkedIn,\
+    \ LinkedIn carousel\">\n<meta name=\"author\" content=\"Arkvital\">\n<meta property=\"og:type\" content=\"website\">\n\
+    <meta property=\"og:site_name\" content=\"Hookline\">\n<meta property=\"og:title\" content=\"Hookline: a free LinkedIn\
+    \ writing studio\">\n<meta property=\"og:description\" content=\"A free LinkedIn writing studio: hooks that survive the\
+    \ see-more fold, posts in your own voice, a calm calendar and honest analytics. Optional AI.\">\n<meta property=\"og:locale\"\
+    \ content=\"en_CA\">\n<meta name=\"twitter:card\" content=\"summary\">\n<meta name=\"twitter:title\" content=\"Hookline:\
+    \ a free LinkedIn writing studio\">\n<meta name=\"twitter:description\" content=\"A free LinkedIn writing studio: hooks\
+    \ that survive the see-more fold, posts in your own voice, a calm calendar and honest analytics. Optional AI.\">\n<!--\
+    \ seo:end -->\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">\n<meta name=\"\
+    theme-color\" content=\"#1e3a5f\">\n<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">\n<link rel=\"preconnect\"\
+    \ href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link\
+    \ href=\"https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap\"\
     \ rel=\"stylesheet\">\n<link id=\"ui-favicon\" rel=\"icon\" type=\"image/svg+xml\" href=\"_/theme/icon.svg?v=81ec17a88e\"\
     >\n<link rel=\"apple-touch-icon\" href=\"_/theme/icon-180.png?v=81ec17a88e\">\n<script>\n/* Keep our tab icon: Anvil adds\
     \ its own <link rel=\"icon\">, so drop any other icon link. */\n(function () {\n  function keep() {\n    var ours = document.getElementById('ui-favicon');\n\
