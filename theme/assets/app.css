@@ -475,8 +475,11 @@ html.ui-modal-open { overflow: hidden; }
 .lp-hero { position: relative; padding: 64px 0 40px; }
 .lp-hero::before { content: ""; position: absolute; inset: -40% -20% auto auto; width: 70vw; height: 70vw; max-width: 900px; max-height: 900px; z-index: 0;
   background: radial-gradient(closest-side, var(--c-brand-soft), transparent 70%); pointer-events: none; }
-.lp-hero .ui-wrap { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; padding-top: 0; padding-bottom: 0; }
-.lp-hero h1 { font-size: clamp(2.3rem, 5.4vw, 3.8rem); line-height: 1.04; margin-bottom: 18px; }
+.lp-hero .ui-wrap { position: relative; z-index: 1; padding-top: 0; padding-bottom: 0; }
+/* Live-demo hero: the headline row on top, then the studio itself across the full width: write, see the fold, get the check */
+.lp-top { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: end; margin-bottom: 34px; }
+.lp-top .lp-lead { margin-bottom: 20px; font-size: 1.08rem; }
+.lp-hero h1 { font-size: clamp(2.4rem, 5.8vw, 4.3rem); line-height: 1.02; margin: 12px 0 0; }
 .lp-hero h1 em { font-style: normal; color: var(--c-brand); }
 .lp-lead { font-size: 1.2rem; color: var(--c-muted); max-width: 34em; margin-bottom: 28px; }
 .lp-cta { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -507,15 +510,25 @@ html.ui-modal-open { overflow: hidden; }
 .lp-hero::before { background: radial-gradient(closest-side, color-mix(in srgb, var(--c-gold) 22%, transparent), transparent 70%); }
 .lp-hero h1 { font-weight: 400; }
 .lp-hero h1 em { font-style: italic; color: var(--c-brand); }
-.lp-art { position: relative; }
-.lp-try { background: color-mix(in srgb, var(--c-surface) 86%, transparent); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border: 1px solid var(--c-line); border-radius: 20px; box-shadow: var(--shadow-lg); padding: 16px; }
-.lp-try-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
-.lp-try-h b { font: 600 .74rem var(--font-body); letter-spacing: .14em; text-transform: uppercase; color: var(--c-accent); }
-.lp-try textarea { min-height: 96px !important; font-size: .92rem !important; }
-.lp-try .hl-feed { margin-top: 12px; box-shadow: none; }
-.lp-try-score { display: flex; gap: 12px; align-items: center; margin-top: 12px; font-size: .84rem; color: var(--c-muted); }
-.lp-try-score .hl-score { width: 48px; height: 48px; }
-.lp-try-score .hl-score b { font-size: 1.05rem; }
+.lp-studio { display: grid; grid-template-columns: 1fr 1.05fr .85fr; gap: 0; background: color-mix(in srgb, var(--c-surface) 90%, transparent); -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px); border: 1px solid var(--c-line); border-radius: 22px; box-shadow: var(--shadow-lg); overflow: hidden; }
+.lp-pane { padding: 18px 20px 20px; min-width: 0; }
+.lp-pane + .lp-pane { border-left: 1px solid var(--c-line); }
+.lp-pane h5 { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0 0 12px; font: 600 .72rem var(--font-body); letter-spacing: .14em; text-transform: uppercase; color: var(--c-accent); }
+.lp-pane h5 span { color: var(--c-muted); letter-spacing: .04em; text-transform: none; font-weight: 500; }
+.lp-pane textarea { min-height: 236px !important; font-size: .92rem !important; resize: vertical; }
+.lp-pane .hl-feed { box-shadow: none; }
+.lp-pane.fold { background: var(--c-surface-2, transparent); }
+.lp-try-score { display: flex; gap: 12px; align-items: center; font-size: .86rem; color: var(--c-muted); margin-bottom: 12px; }
+.lp-try-score .hl-score { width: 56px; height: 56px; flex: none; }
+.lp-try-score .hl-score b { font-size: 1.15rem; }
+.lp-checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.lp-checks li { display: grid; grid-template-columns: 10px 1fr; gap: 10px; align-items: start; font-size: .84rem; line-height: 1.35; }
+.lp-checks li::before { content: ""; width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; background: var(--c-good); }
+.lp-checks li.warn::before { background: var(--c-gold); } .lp-checks li.bad::before { background: var(--c-bad); }
+.lp-type { display: inline-flex; gap: 6px; align-items: center; font-size: .78rem; color: var(--c-muted); margin-top: 8px; }
+.lp-type::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--c-brand); animation: lp-blink 1.4s ease-in-out infinite; }
+@keyframes lp-blink { 50% { opacity: .25; } }
 .lp-not { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
 .lp-not div { display: flex; gap: 10px; align-items: flex-start; padding: 14px 16px; border-radius: var(--radius); background: var(--c-surface); border: 1px solid var(--c-line); font-weight: 600; font-size: .92rem; }
 .lp-not div small { display: block; font-weight: 400; color: var(--c-muted); font-size: .84rem; margin-top: 2px; }
@@ -524,12 +537,16 @@ html.ui-modal-open { overflow: hidden; }
 .lp-band h2, .lp-band p { color: #fff; }
 .lp-step::before { background: var(--c-gold) !important; color: #1a1406 !important; }
 .lp-section .ui-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1060px) and (min-width: 861px) { .lp-studio { grid-template-columns: 1fr 1fr; } .lp-pane.check { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--c-line); } }
+@media (prefers-reduced-motion: reduce) { .lp-type::before { animation: none; } }
 @media (max-width: 960px) { .lp-section .ui-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .lp-section .ui-grid { grid-template-columns: 1fr; } }
 @media (max-width: 860px) {
   .lp-hero { padding-top: 36px; }
-  .lp-hero .ui-wrap { grid-template-columns: 1fr; gap: 28px; }
-  .lp-art { max-width: 460px; width: 100%; margin: 0 auto; }
+  .lp-top { grid-template-columns: 1fr; gap: 16px; margin-bottom: 24px; }
+  .lp-studio { grid-template-columns: 1fr; }
+  .lp-pane + .lp-pane { border-left: 0; border-top: 1px solid var(--c-line); }
+  .lp-pane textarea { min-height: 160px !important; }
   .lp-steps { grid-template-columns: 1fr; }
   .lp-band { padding: 30px 22px; }
   .lp-section { padding: 40px 0; }

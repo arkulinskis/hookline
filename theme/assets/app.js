@@ -1822,10 +1822,15 @@
   };
 
   var SAMPLE = 'I almost didn\'t post this.\n\nFor two years I wrote LinkedIn posts in my head and never pressed Publish.\n\nWhat changed wasn\'t confidence. It was a system: one idea a day, a hook I\'d stop for, and a fixed day to post.\n\nWhat\'s the post you keep not writing?';
+  // The studio, for real: type in pane 1, see LinkedIn's "see more" cut in pane 2, read the post check in pane 3
   function heroArt() {
-    return '<div class="lp-art"><div class="lp-try"><div class="lp-try-h"><b>Try the fold</b><div class="ui-seg" role="group" aria-label="Preview size"><button type="button" data-lpmode="mobile" class="on">Phone</button><button type="button" data-lpmode="desktop">Desktop</button></div></div>' +
-      '<label class="ui-field"><span class="small muted" style="font-weight:500">Type or paste a post. See where “see more” cuts it.</span><textarea data-lptext rows="4">' + UI.esc(SAMPLE) + '</textarea></label>' +
-      '<div data-lpprev></div><div class="lp-try-score" data-lpscore></div></div></div>';
+    return '<div class="lp-studio">' +
+      '<div class="lp-pane"><h5>1 · Write <span>your words</span></h5>' +
+        '<label class="ui-field"><textarea data-lptext rows="9" aria-label="Type or paste a post">' + UI.esc(SAMPLE) + '</textarea></label>' +
+        '<span class="lp-type">Type here: the other two update as you go</span></div>' +
+      '<div class="lp-pane fold"><h5>2 · The fold <div class="ui-seg" role="group" aria-label="Preview size"><button type="button" data-lpmode="mobile" class="on">Phone</button><button type="button" data-lpmode="desktop">Desktop</button></div></h5>' +
+        '<div data-lpprev></div></div>' +
+      '<div class="lp-pane check"><h5>3 · The check <span>no AI needed</span></h5><div class="lp-try-score" data-lpscore></div><ul class="lp-checks" data-lpchecks></ul></div></div>';
   }
   function wireHero(view) {
     var ta = view.querySelector('[data-lptext]'), mode = 'mobile';
@@ -1833,12 +1838,15 @@
     function upd() {
       view.querySelector('[data-lpprev]').innerHTML = HL.feedCard(ta.value, { name: 'You', headline: 'Your headline', mode: mode });
       var c = HL.check(ta.value), h = HL.hookScore(HL.hook(ta.value));
-      view.querySelector('[data-lpscore]').innerHTML = ta.value.trim() ? HL.scoreRing(c.score) + '<span><b style="color:var(--c-ink)">Post score ' + c.score + '</b> · hook ' + h.score + '/100. ' + UI.esc((c.items.filter(function (i) { return i.level !== 'good'; })[0] || { title: 'Nothing to fix.' }).title) + '</span>' : '';
+      view.querySelector('[data-lpscore]').innerHTML = ta.value.trim() ? HL.scoreRing(c.score) + '<span><b style="color:var(--c-ink)">Post score ' + c.score + '</b><br>hook ' + h.score + '/100</span>' : '';
+      var items = c.items.filter(function (i) { return i.level !== 'good'; }).concat(c.items.filter(function (i) { return i.level === 'good'; })).slice(0, 5);
+      view.querySelector('[data-lpchecks]').innerHTML = ta.value.trim() ? items.map(function (i) {
+        return '<li class="' + (i.level === 'good' ? '' : i.level === 'bad' ? 'bad' : 'warn') + '">' + UI.esc(i.title) + '</li>'; }).join('') : '';
     }
     ta.addEventListener('input', upd);
     view.addEventListener('click', function (e) {
       var m = e.target.closest('[data-lpmode]'); if (m) { mode = m.getAttribute('data-lpmode'); view.querySelectorAll('[data-lpmode]').forEach(function (b) { b.classList.toggle('on', b === m); }); upd(); }
-      if (e.target.closest('.lp-try [data-expand]')) { view.querySelector('[data-lpprev]').innerHTML = HL.feedCard(ta.value, { name: 'You', headline: 'Your headline', mode: mode, expanded: true }); }
+      if (e.target.closest('.lp-studio [data-expand]')) { view.querySelector('[data-lpprev]').innerHTML = HL.feedCard(ta.value, { name: 'You', headline: 'Your headline', mode: mode, expanded: true }); }
     });
     upd();
   }
@@ -1849,10 +1857,10 @@
       : '<a class="ui-btn primary lg" href="#auth/signup" data-go="auth/signup">' + esc(C.cta) + ' ' + UI.icon('arrow') + '</a>' +
         '<a class="ui-btn lg" href="#auth" data-go="auth">I have an account</a>';
     view.innerHTML =
-      '<section class="lp-hero"><div class="ui-wrap"><div>' +
-        '<div class="eyebrow">' + esc(C.eyebrow) + '</div><h1>' + C.title + '</h1><p class="lp-lead">' + esc(C.lead) + '</p>' +
-        '<div class="lp-cta">' + primary + '</div>' +
-        '<div class="lp-proof">' + C.proof.map(function (p) { return '<span>' + UI.icon('check') + esc(p) + '</span>'; }).join('') + '</div>' +
+      '<section class="lp-hero"><div class="ui-wrap"><div class="lp-top">' +
+        '<div><div class="eyebrow">' + esc(C.eyebrow) + '</div><h1>' + C.title + '</h1></div>' +
+        '<div><p class="lp-lead">' + esc(C.lead) + '</p><div class="lp-cta">' + primary + '</div>' +
+        '<div class="lp-proof">' + C.proof.map(function (p) { return '<span>' + UI.icon('check') + esc(p) + '</span>'; }).join('') + '</div></div>' +
       '</div>' + heroArt() + '</div></section>' +
       '<section class="lp-section" id="how"><div class="ui-wrap"><div class="lp-head"><h2>' + esc(C.stepsTitle) + '</h2><p>' + esc(C.stepsLead) + '</p></div>' +
         '<div class="lp-steps">' + C.steps.map(function (s) { return '<div class="ui-card lp-step"><h3>' + esc(s[0]) + '</h3><p class="muted">' + esc(s[1]) + '</p></div>'; }).join('') + '</div></div></section>' +
