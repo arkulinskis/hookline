@@ -42,7 +42,7 @@ optional and runs on each user's own Anthropic API key, straight from their brow
 **Never:** scraping, a browser extension, auto-posting on a timer, auto-comments/DMs, viral-post libraries, storing a
 LinkedIn password.
 
-**For everyone:** a landing page with a live fold tester, sign-up with email and password, a feedback form ("Send
+**For everyone:** a landing page with a live fold tester, sign-up with email and password or Google, a feedback form ("Send
 feedback" in the footer and menu), and the Privacy & Terms page (footer link, `#legal`).
 
 **For admins** (`#admin`; arkulinskis@gmail.com becomes an admin on first sign-in):
@@ -53,7 +53,7 @@ feedback" in the footer and menu), and the Privacy & Terms page (footer link, `#
 ## Setting it up in Anvil (once)
 
 1. In the Anvil editor: **Create app → Clone from GitHub**, and paste `https://github.com/arkulinskis/hookline`.
-2. **Users** service: email + password, sign-up allowed (already set in `anvil.yaml`; check it).
+2. **Users** service: email + password and "Continue with Google", sign-up allowed (already set in `anvil.yaml`; check it).
 3. **Email** service (reminders) and **App Secrets** service: check they're there.
 4. Open the app in the editor. If it shows a **Schema Mismatch** alert, choose **"The schema of the source code is correct"** so Anvil creates the tables.
 5. **Scheduled Tasks**: `send_reminders` every 15 minutes is in `anvil.yaml` (needs a paid Anvil plan; without one, reminders still show in the app as a "due now" banner).
