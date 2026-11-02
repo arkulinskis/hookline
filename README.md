@@ -6,7 +6,7 @@ through LinkedIn's official API (only when you press the button), and learn from
 optional and runs on each user's own Anthropic API key, straight from their browser. Built on [Anvil](https://anvil.works).
 
 - **App repo:** github.com/arkulinskis/hookline (branch `master`). Anvil pulls `master`.
-- **Live:** not published yet (planned: hookline.anvil.app).
+- **Live:** https://hookline.anvil.app
 
 ## What it does
 
