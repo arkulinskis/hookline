@@ -430,7 +430,7 @@ metadata:
   title: 'Hookline: a free LinkedIn writing studio'
 name: Hookline
 native_deps:
-  head_html: "<script src=\"_/theme/legal-kit.js?v=e48933ae34\"></script>\n<!-- seo:start (APP_MAKER/seo: edit seo/apps/hookline.json\
+  head_html: "<script src=\"_/theme/legal-kit.js?v=ce0686a61b\"></script>\n<!-- seo:start (APP_MAKER/seo: edit seo/apps/hookline.json\
     \ and run seo.py, not here) -->\n<link rel=\"canonical\" href=\"https://hookline.anvil.app/\">\n<meta name=\"robots\"\
     \ content=\"index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1\">\n<meta name=\"keywords\" content=\"\
     LinkedIn post writer, Taplio alternative, LinkedIn hook generator, LinkedIn content calendar, LinkedIn analytics, write\
@@ -474,7 +474,7 @@ native_deps:
     })();\n</script>\n\n<!-- Prepsto feedback panel: every \"Submit feedback\" link and button opens it (it is the only feedback\
     \ channel). No floating button, no cookies, nothing loads until it is opened. Codes: APP_MAKER/prepsto-links.json -->\n\
     <script src=\"https://prepsto.com/_/theme/widget.js\" data-prepsto=\"p3xy6ax\" data-button=\"false\" data-label=\"Submit\
-    \ feedback\" async></script>\n<link rel=\"stylesheet\" href=\"_/theme/app.css?v=5ff70ae1cc\">\n<script src=\"_/theme/app.js?v=e4d68214d7\"\
+    \ feedback\" async></script>\n<link rel=\"stylesheet\" href=\"_/theme/app.css?v=6f57bb15b9\">\n<script src=\"_/theme/app.js?v=25a70ad594\"\
     ></script>\n"
 package_name: Hookline
 runtime_options:
