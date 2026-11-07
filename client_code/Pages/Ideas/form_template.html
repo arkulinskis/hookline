@@ -1,0 +1,50 @@
+<anvil-form layout="Hookline.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ui-wrap">
+      <div class="ui-page-head">
+        <div><h1>Ideas</h1><p class="muted">Your best posts come from your own week. Catch ideas the moment they show up.</p></div>
+      </div>
+      <div class="id-grid">
+        <div>
+          <div class="id-capture">
+            <anvil-component type="TextBox" name="idea_box" prop:placeholder="An idea, in a line"></anvil-component>
+            <anvil-component type="DropDown" name="pillar_dd"></anvil-component>
+            <anvil-component type="Button" name="add_button" prop:text="Add" prop:role='["btn", "btn-primary", "ic-plus"]'></anvil-component>
+          </div>
+          <div class="ui-row id-filters">
+            <div class="ui-seg" role="group" aria-label="Show">
+              <anvil-component type="RepeatingPanel" name="filter_panel" prop:item_template="Hookline.Items.SegBtn" prop:role='["contents"]'></anvil-component>
+            </div>
+            <span class="ui-spacer"></span>
+            <anvil-component type="Button" name="ai_button" prop:text="Suggest 10 ideas" prop:role='["btn", "btn-sm", "ic-sparkle"]'></anvil-component>
+          </div>
+          <anvil-component type="RepeatingPanel" name="ideas_panel" prop:item_template="Hookline.Items.IdeaRow" prop:role='["id-list"]'></anvil-component>
+          <div class="ui-empty" anvil:name="empty">
+            <i class="ic ic-bulb"></i>
+            <h2 anvil:dom-node="empty_title">No ideas waiting</h2>
+            <p>Answer a question on the right, or add one above.</p>
+          </div>
+        </div>
+        <aside class="id-side">
+          <div class="id-prompt">
+            <h2 class="id-q-head">Answer one question</h2>
+            <anvil-component type="Label" name="question_label" prop:role='["id-question"]'></anvil-component>
+            <anvil-component type="TextArea" name="answer_box" prop:placeholder="A few words is enough. It's saved as an idea."></anvil-component>
+            <div class="ui-row id-q-acts">
+              <anvil-component type="Button" name="skip_button" prop:text="Another" prop:role='["btn", "btn-ghost", "btn-sm", "ic-refresh"]'></anvil-component>
+              <span class="ui-spacer"></span>
+              <anvil-component type="Button" name="save_answer_button" prop:text="Save idea" prop:role='["btn", "btn-gold", "btn-sm", "ic-plus"]'></anvil-component>
+            </div>
+            <div class="id-kinds" role="group" aria-label="Kind of question">
+              <anvil-component type="RepeatingPanel" name="kinds_panel" prop:item_template="Hookline.Items.SegBtn" prop:role='["contents"]'></anvil-component>
+            </div>
+          </div>
+          <div class="ui-card">
+            <h2 class="id-why-h">Why your own life?</h2>
+            <p class="small muted id-why">Hookline doesn't hand you a library of other people's viral posts. Readers can tell, and LinkedIn's feed now favours real expertise and substance. Your moments, mistakes and numbers are what nobody else can post.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

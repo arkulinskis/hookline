@@ -1,0 +1,13 @@
+<div class="ui">
+  <div class="dlg" anvil:name="box" anvil:on-dom:click="self.box_click">
+    <anvil-component type="Label" name="title_label" prop:role='["dlg-title"]'></anvil-component>
+    <div class="ui-stack">
+      <a class="ui-btn primary block" href="#studio/new"><i class="ic ic-pen"></i>Write a new post</a>
+      <p class="small muted" anvil:name="drafts_hint">Or schedule a draft for this day at 8:30:</p>
+      <anvil-component type="RepeatingPanel" name="drafts_panel" prop:item_template="Hookline.Items.PickRow" prop:role='["dp-list"]'></anvil-component>
+    </div>
+    <div class="ui-row end dlg-acts">
+      <anvil-component type="Button" name="close_button" prop:text="Cancel" prop:role='["btn", "btn-ghost"]'></anvil-component>
+    </div>
+  </div>
+</div>

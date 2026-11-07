@@ -1,0 +1,88 @@
+<anvil-form layout="Hookline.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ui-wrap st">
+      <div class="hl-due" anvil:name="due_bar">
+        <i class="ic ic-bell"></i>
+        <anvil-component type="Label" name="due_text" prop:role='["t"]'></anvil-component>
+        <span class="ui-spacer"></span>
+        <a class="ui-btn sm" href="#studio" anvil:name="due_link">Open it</a>
+      </div>
+      <div class="ui-page-head">
+        <div>
+          <anvil-component type="Label" name="page_title" prop:text="Write a post" prop:role='["page-title"]'></anvil-component>
+          <anvil-component type="Label" name="status_line" prop:role='["page-sub"]'></anvil-component>
+        </div>
+        <div class="ui-row">
+          <anvil-component type="Button" name="new_button" prop:text="New" prop:role='["btn", "ic-plus"]'></anvil-component>
+        </div>
+      </div>
+
+      <div class="st-grid">
+        <section class="ui-card st-main">
+          <div class="st-top">
+            <anvil-component type="DropDown" name="pillar_dd" prop:role='["st-pill"]'></anvil-component>
+            <anvil-component type="DropDown" name="format_dd" prop:role='["st-pill"]'></anvil-component>
+            <anvil-component type="Label" name="when_label" prop:role='["st-when"]'></anvil-component>
+            <anvil-component type="Label" name="posted_badge" prop:role='["badge", "badge-good"]'></anvil-component>
+            <anvil-component type="Label" name="save_label" prop:text="Not saved yet" prop:role='["st-save"]'></anvil-component>
+          </div>
+          <div class="st-tools">
+            <anvil-component type="Button" name="hooklab_button" prop:text="Hook lab" prop:role='["btn", "ic-hook"]'></anvil-component>
+            <anvil-component type="Button" name="struct_button" prop:text="Structures" prop:role='["btn", "ic-layers"]'></anvil-component>
+            <anvil-component type="Button" name="ai_button" prop:text="AI" prop:role='["btn", "ic-sparkle"]'></anvil-component>
+            <anvil-component type="Button" name="carousel_button" prop:text="Carousel" prop:role='["btn", "ic-slides"]'></anvil-component>
+          </div>
+          <anvil-component type="TextArea" name="text_box" prop:auto_expand="true" prop:role='["st-text"]' prop:placeholder="Start with the line that would make you stop scrolling.&#10;&#10;Then tell them why it matters. Short paragraphs. One idea.&#10;&#10;End with a question they can answer in a line."></anvil-component>
+          <div class="st-meter">
+            <anvil-component type="Label" name="count_label" prop:role='["num"]'></anvil-component>
+            <div class="st-bar" anvil:name="bar"><i anvil:dom-node="bar_fill"></i></div>
+            <anvil-component type="Label" name="readtime_label"></anvil-component>
+          </div>
+          <div class="st-more">
+            <details anvil:dom-node="fc_details">
+              <summary><i class="ic ic-comment"></i>First comment <span class="faint">for links: post it right after</span></summary>
+              <div><anvil-component type="TextArea" name="fc_box" prop:placeholder="Link and a line of context, e.g. “The full guide is here: https://…”"></anvil-component></div>
+            </details>
+            <details anvil:dom-node="notes_details">
+              <summary><i class="ic ic-edit"></i>Notes <span class="faint">only you see these</span></summary>
+              <div><anvil-component type="TextArea" name="notes_box" prop:placeholder="Sources, who to tag, what to check"></anvil-component></div>
+            </details>
+          </div>
+          <div class="st-acts">
+            <anvil-component type="Button" name="save_button" prop:text="Save" prop:role='["btn", "btn-primary", "ic-check"]'></anvil-component>
+            <anvil-component type="Button" name="schedule_button" prop:text="Schedule" prop:role='["btn", "ic-calendar"]'></anvil-component>
+            <anvil-component type="Button" name="post_button" prop:text="Post on LinkedIn" prop:role='["btn", "btn-gold", "ic-send"]'></anvil-component>
+            <anvil-component type="Button" name="metrics_button" prop:text="Results" prop:role='["btn", "ic-chart"]'></anvil-component>
+            <span class="ui-spacer"></span>
+            <anvil-component type="Button" name="markposted_button" prop:text="Mark as posted" prop:role='["btn", "btn-ghost", "btn-sm"]'></anvil-component>
+            <anvil-component type="Button" name="delete_button" prop:text="Delete post" prop:role='["btn", "btn-ghost", "btn-icon", "ic-trash"]'></anvil-component>
+          </div>
+        </section>
+
+        <aside class="st-side">
+          <div class="ui-card">
+            <div class="ui-row between st-prev-head">
+              <h2 class="st-h">Preview</h2>
+              <div class="ui-seg" role="group" aria-label="Preview size">
+                <button type="button" anvil:name="mode_desktop" anvil:on-dom:click="self.mode_desktop_click"><i class="ic ic-monitor"></i> Desktop</button>
+                <button type="button" anvil:name="mode_mobile" anvil:on-dom:click="self.mode_mobile_click"><i class="ic ic-phone"></i> Phone</button>
+              </div>
+            </div>
+            <anvil-component type="Hookline.Components.FeedPreview" name="preview"></anvil-component>
+            <p class="small faint st-fold-note">Dashed line = where “see more” cuts it (about 210 characters on desktop, 140 on phones). Click “…see more” to see it all.</p>
+          </div>
+          <div class="ui-card">
+            <div class="st-score">
+              <anvil-component type="Hookline.Components.ScoreRing" name="score_ring"></anvil-component>
+              <div>
+                <anvil-component type="Label" name="score_title" prop:text="Post check" prop:role='["st-h"]'></anvil-component>
+                <anvil-component type="Label" name="score_text" prop:role='["fine-print"]'></anvil-component>
+              </div>
+            </div>
+            <anvil-component type="RepeatingPanel" name="checks_panel" prop:item_template="Hookline.Items.Check" prop:role='["hl-checks"]'></anvil-component>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

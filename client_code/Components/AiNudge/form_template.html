@@ -1,0 +1,21 @@
+---
+custom_component: true
+properties:
+  - name: what
+    type: string
+    default_value: "let AI help"
+    description: What the key would do here ("get six fresh hooks for this post")
+    default_binding_prop: true
+toolbox_item:
+  title: AI key nudge
+  group: Hookline
+help_text: |
+  A friendly "add your own Claude API key" box with a link to Voice & settings > AI. Set on_go to close a dialog.
+---
+<div class="nudge-host">
+  <div class="hl-empty-ai">
+    <i class="ic ic-key"></i>
+    <span><b>Add your own Claude API key</b> to <span anvil:dom-node="what_text">let AI help</span>. It stays in this browser and costs you cents. Everything else works without it.</span>
+    <a class="ui-btn sm" href="#voice/ai" anvil:dom-node="go_link">Add key</a>
+  </div>
+</div>

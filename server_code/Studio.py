@@ -135,7 +135,7 @@ def save_post(post):
         return C.fail("Pick a date and time to schedule it.")
     if status in ("draft", "scheduled", "posted") and not text.strip():
         return C.fail("Write something first.")
-    fields = dict(text=text, first_comment=C.text(post.get("first_comment"), 1250, multiline=True),
+    fields: dict = dict(text=text, first_comment=C.text(post.get("first_comment"), 1250, multiline=True),
                   pillar=C.text(post.get("pillar"), 40), format=fmt, status=status, scheduled_at=when,
                   notes=C.text(post.get("notes"), 1000, multiline=True), url=_url(post.get("url")),
                   metrics=_clean_metrics(post.get("metrics")), carousel=_clean_carousel(post.get("carousel")), updated=C.now())
@@ -303,7 +303,7 @@ def save_profile(voice=None, pillars=None, cadence=None, reminders=None, timezon
 def add_examples():
     """Fill your workspace with example past posts and analytics (flagged, removable) to explore Insights."""
     me = C.require_user()
-    if app_tables.posts.search(owner=me, is_demo=True):
+    if len(app_tables.posts.search(owner=me, is_demo=True)):  # a SearchIterator is always truthy: count it
         return C.ok(added=0)
     n = DemoData.examples_for(me)
     return C.ok(added=n)

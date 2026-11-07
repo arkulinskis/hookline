@@ -1,0 +1,42 @@
+<anvil-form layout="Hookline.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ui-wrap">
+      <div class="ui-page-head">
+        <div>
+          <h1>Posts</h1>
+          <div class="muted ps-sub"><span anvil:dom-node="summary"></span> waiting in <a href="#ideas">Ideas</a></div>
+        </div>
+        <a class="ui-btn primary" href="#studio/new"><i class="ic ic-plus"></i>New post</a>
+      </div>
+      <div class="hl-due" anvil:name="due_bar">
+        <i class="ic ic-bell"></i>
+        <anvil-component type="Label" name="due_text" prop:role='["t"]'></anvil-component>
+        <span class="ui-spacer"></span>
+        <a class="ui-btn sm gold" href="#studio" anvil:name="due_link"><i class="ic ic-send"></i>Post it</a>
+      </div>
+      <div class="ps-tools">
+        <anvil-component type="TextBox" name="search_box" prop:placeholder="Search your posts" prop:type="search"></anvil-component>
+        <div class="ui-seg" role="group" aria-label="Pillar">
+          <anvil-component type="RepeatingPanel" name="pillar_panel" prop:item_template="Hookline.Items.SegBtn" prop:role='["contents"]'></anvil-component>
+        </div>
+      </div>
+      <div class="ps-cols">
+        <section class="ps-col">
+          <h2>Drafts <span anvil:dom-node="n_draft"></span></h2>
+          <anvil-component type="RepeatingPanel" name="draft_panel" prop:item_template="Hookline.Items.PostCard" prop:role='["ps-list"]'></anvil-component>
+          <div class="ui-empty ps-empty" anvil:name="e_draft"><p>No drafts. <a href="#ideas">Pick an idea</a> or start fresh.</p></div>
+        </section>
+        <section class="ps-col">
+          <h2>Scheduled <span anvil:dom-node="n_sched"></span></h2>
+          <anvil-component type="RepeatingPanel" name="sched_panel" prop:item_template="Hookline.Items.PostCard" prop:role='["ps-list"]'></anvil-component>
+          <div class="ui-empty ps-empty" anvil:name="e_sched"><p anvil:dom-node="e_sched_text">Nothing scheduled.</p></div>
+        </section>
+        <section class="ps-col">
+          <h2>Posted <span anvil:dom-node="n_posted"></span></h2>
+          <anvil-component type="RepeatingPanel" name="posted_panel" prop:item_template="Hookline.Items.PostCard" prop:role='["ps-list"]'></anvil-component>
+          <div class="ui-empty ps-empty" anvil:name="e_posted"><p>Posts you publish land here with their results.</p></div>
+        </section>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

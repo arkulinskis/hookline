@@ -1,0 +1,82 @@
+<anvil-form layout="Hookline.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ui-wrap">
+      <div class="ui-page-head">
+        <div><h1>Lab</h1><p class="muted">Writing tools: hooks, post angles from longer pieces, comment drafts and clean-up.</p></div>
+        <anvil-component type="Label" name="ai_badge" prop:role='["badge"]'></anvil-component>
+      </div>
+      <nav class="ui-tabs" aria-label="Lab tools">
+        <a href="#lab/hooks" anvil:name="tab_hooks"><i class="ic ic-hook"></i>Hooks</a>
+        <a href="#lab/repurpose" anvil:name="tab_repurpose"><i class="ic ic-recycle"></i>Repurpose</a>
+        <a href="#lab/comments" anvil:name="tab_comments"><i class="ic ic-comment"></i>Comments</a>
+        <a href="#lab/clean" anvil:name="tab_clean"><i class="ic ic-broom"></i>Clean-up</a>
+      </nav>
+
+      <div class="lb-two" anvil:name="hooks_part">
+        <div>
+          <div class="ui-stack">
+            <label class="ui-field"><span>What's the post about?</span>
+              <anvil-component type="TextBox" name="topic_box" prop:placeholder="e.g. firing a client, pricing my first course"></anvil-component></label>
+            <label class="ui-field"><span>Or test your own first line</span>
+              <anvil-component type="TextBox" name="own_box" prop:placeholder="Paste a hook to score it"></anvil-component></label>
+            <div class="ui-row">
+              <anvil-component type="Button" name="hooks_button" prop:text="Get hooks" prop:role='["btn", "btn-primary", "ic-hook"]'></anvil-component>
+              <anvil-component type="Button" name="aihooks_button" prop:text="AI hooks" prop:role='["btn", "ic-sparkle"]'></anvil-component>
+            </div>
+          </div>
+          <div class="ui-card lb-note">
+            <h2 class="lb-h">What makes a hook work</h2>
+            <p class="small muted">It's short enough to finish before "see more" (about 140 characters on a phone), specific (a number, a moment, a name), and it opens a loop: a tension, a surprise, or a promise the post keeps. Score is a rule-of-thumb, not a prediction.</p>
+          </div>
+        </div>
+        <div class="lb-out">
+          <anvil-component type="Hookline.Components.AiNudge" name="hooks_nudge" prop:what="write hooks with AI"></anvil-component>
+          <anvil-component type="RepeatingPanel" name="aihooks_panel" prop:item_template="Hookline.Items.LabCard" prop:role='["lb-list"]'></anvil-component>
+          <anvil-component type="RepeatingPanel" name="hooks_panel" prop:item_template="Hookline.Items.LabCard" prop:role='["lb-list"]'></anvil-component>
+        </div>
+      </div>
+
+      <div class="lb-two" anvil:name="repurpose_part">
+        <div class="ui-stack">
+          <label class="ui-field"><span>Paste a blog post, newsletter, talk transcript or notes</span>
+            <anvil-component type="TextArea" name="src_box" prop:placeholder="The longer the better: Hookline finds the post-sized ideas inside."></anvil-component></label>
+          <anvil-component type="Button" name="rep_button" prop:text="Find post angles" prop:role='["btn", "btn-primary", "ic-recycle"]'></anvil-component>
+        </div>
+        <div class="lb-out">
+          <anvil-component type="Hookline.Components.AiNudge" name="rep_nudge" prop:what="turn this into 4 post angles"></anvil-component>
+          <anvil-component type="Label" name="rep_msg" prop:role='["fine-print"]'></anvil-component>
+          <anvil-component type="RepeatingPanel" name="rep_panel" prop:item_template="Hookline.Items.LabCard" prop:role='["lb-list"]'></anvil-component>
+        </div>
+      </div>
+
+      <div class="lb-two" anvil:name="comments_part">
+        <div class="ui-stack">
+          <label class="ui-field"><span>Paste the post you want to comment on</span>
+            <anvil-component type="TextArea" name="post_box" prop:placeholder="Their post text"></anvil-component></label>
+          <anvil-component type="Button" name="com_button" prop:text="Help me comment" prop:role='["btn", "btn-primary", "ic-comment"]'></anvil-component>
+          <p class="small muted">Hookline only drafts: you read, edit and post the comment yourself. Automated comments break LinkedIn's rules and are shown to fewer people.</p>
+        </div>
+        <div class="lb-out">
+          <anvil-component type="Hookline.Components.AiNudge" name="com_nudge" prop:what="draft three comments for this post"></anvil-component>
+          <anvil-component type="Label" name="com_msg" prop:role='["fine-print"]'></anvil-component>
+          <anvil-component type="RepeatingPanel" name="com_panel" prop:item_template="Hookline.Items.LabCard" prop:role='["lb-list"]'></anvil-component>
+          <anvil-component type="Label" name="com_note" prop:text="Fill in any [brackets] with your own detail before posting." prop:role='["fine-print"]'></anvil-component>
+        </div>
+      </div>
+
+      <div class="lb-two" anvil:name="clean_part">
+        <label class="ui-field"><span>Paste text with 𝗳𝗮𝗻𝗰𝘆 𝘭𝘦𝘵𝘵𝘦𝘳𝘴 or messy spacing</span>
+          <anvil-component type="TextArea" name="dirty_box" prop:placeholder="𝗧𝗵𝗶𝘀 𝗹𝗼𝗼𝗸𝘀 𝗯𝗼𝗹𝗱, but screen readers read it letter by letter."></anvil-component></label>
+        <div>
+          <label class="ui-field"><span>Clean version</span>
+            <anvil-component type="TextArea" name="clean_box"></anvil-component></label>
+          <div class="ui-row lb-clean-acts">
+            <anvil-component type="Button" name="copyclean_button" prop:text="Copy" prop:role='["btn", "btn-primary", "ic-copy"]'></anvil-component>
+            <anvil-component type="Label" name="clean_count" prop:role='["fine-print"]'></anvil-component>
+          </div>
+          <p class="small muted lb-clean-note">LinkedIn has no real bold. The "bold" generators swap letters for maths symbols, which screen readers announce one by one and LinkedIn search can't match. Use a short first line and white space for emphasis instead.</p>
+        </div>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

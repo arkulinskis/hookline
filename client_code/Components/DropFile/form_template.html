@@ -1,0 +1,16 @@
+---
+custom_component: true
+properties: []
+toolbox_item:
+  title: Analytics file drop
+  group: Hookline
+help_text: |
+  A drop zone + file picker for LinkedIn's analytics export (XLSX/CSV). Set on_file(file) (a browser File); open() picks.
+---
+<div class="df-host">
+  <label class="in-drop" anvil:dom-node="drop">
+    <input type="file" accept=".xlsx,.xls,.csv" anvil:dom-node="file">
+    <i class="ic ic-upload"></i> <b>Drop your LinkedIn analytics export</b><br>
+    <span class="small muted">XLSX or CSV. It's read in your browser; only the numbers are saved.</span>
+  </label>
+</div>

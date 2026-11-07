@@ -1,0 +1,19 @@
+<div class="ui">
+  <div class="dlg">
+    <h2>How did it do?</h2>
+    <p class="muted small">Copy the numbers from the post's analytics on LinkedIn (or import your analytics export on Insights).</p>
+    <div class="ui-grid two">
+      <label class="ui-field"><span>Impressions</span><anvil-component type="TextBox" name="m_impressions" prop:type="number"></anvil-component></label>
+      <label class="ui-field"><span>Reactions</span><anvil-component type="TextBox" name="m_reactions" prop:type="number"></anvil-component></label>
+      <label class="ui-field"><span>Comments</span><anvil-component type="TextBox" name="m_comments" prop:type="number"></anvil-component></label>
+      <label class="ui-field"><span>Reposts</span><anvil-component type="TextBox" name="m_reposts" prop:type="number"></anvil-component></label>
+      <label class="ui-field"><span>Saves</span><anvil-component type="TextBox" name="m_saves" prop:type="number"></anvil-component></label>
+      <label class="ui-field"><span>Clicks</span><anvil-component type="TextBox" name="m_clicks" prop:type="number"></anvil-component></label>
+    </div>
+    <label class="ui-field mt-url"><span>Post link</span><anvil-component type="TextBox" name="url_box"></anvil-component></label>
+    <div class="ui-row end dlg-acts">
+      <anvil-component type="Button" name="cancel_button" prop:text="Cancel" prop:role='["btn", "btn-ghost"]'></anvil-component>
+      <anvil-component type="Button" name="save_button" prop:text="Save" prop:role='["btn", "btn-primary"]'></anvil-component>
+    </div>
+  </div>
+</div>

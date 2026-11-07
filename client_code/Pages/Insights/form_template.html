@@ -1,0 +1,82 @@
+<anvil-form layout="Hookline.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ui-wrap">
+      <div class="ui-page-head">
+        <div><h1>Insights</h1><p class="muted">What's working, from your own numbers: no scraping, no browser extension.</p></div>
+        <div class="ui-row">
+          <anvil-component type="Button" name="rmex_button" prop:text="Remove examples" prop:role='["btn", "ic-trash"]'></anvil-component>
+          <anvil-component type="Button" name="import_button" prop:text="Import export" prop:role='["btn", "ic-upload"]'></anvil-component>
+        </div>
+      </div>
+
+      <div class="in-grid" anvil:name="empty_part">
+        <div class="ui-card in-card">
+          <h2 class="in-h">Bring your numbers</h2>
+          <p class="sub">LinkedIn lets you download your own analytics. Hookline reads that file.</p>
+          <ol class="in-steps"><li>On LinkedIn, open your profile → <b>Analytics</b> (Post impressions).</li><li>Choose the date range (up to 365 days) and press <b>Export</b>.</li><li>Drop the .xlsx file here.</li></ol>
+          <div class="in-drop-wrap"><anvil-component type="Hookline.Components.DropFile" name="drop_empty"></anvil-component></div>
+          <p class="small muted">You can also log results per post: open a posted post → Results.</p>
+        </div>
+        <div class="ui-card in-card">
+          <h2 class="in-h">Just looking?</h2>
+          <p class="sub">Load 24 example posts with realistic results (a fictional UX designer) to see what Insights shows. Remove them in one click.</p>
+          <anvil-component type="Button" name="examples_button" prop:text="Load example posts" prop:role='["btn", "btn-primary", "ic-sparkle"]'></anvil-component>
+        </div>
+      </div>
+
+      <div anvil:name="data_part">
+        <div class="hl-due" anvil:name="example_note"><i class="ic ic-info"></i><span>You're looking at <b>example data</b> (a fictional UX designer). Remove it when you're ready for your own.</span></div>
+        <div class="in-kpis">
+          <div class="ui-card in-kpi"><b class="num"><span anvil:dom-node="k_posts"></span><span class="in-of" anvil:dom-node="k_target"></span></b><span>posts in 30 days</span><small anvil:dom-node="k_posts_sub"></small></div>
+          <div class="ui-card in-kpi"><b class="num" anvil:dom-node="k_views"></b><span>views per post</span><small anvil:dom-node="k_views_sub"></small></div>
+          <div class="ui-card in-kpi"><b class="num" anvil:dom-node="k_rate"></b><span>engagement rate</span><small>Reactions, comments, reposts ÷ views</small></div>
+          <div class="ui-card in-kpi"><b class="num" anvil:dom-node="k_fol"></b><span anvil:dom-node="k_fol_label"></span><small anvil:dom-node="k_fol_sub"></small></div>
+        </div>
+        <div class="in-grid">
+          <div class="ui-card in-card wide">
+            <h2 class="in-h">Impressions over time</h2>
+            <p class="sub" anvil:dom-node="chart_sub"></p>
+            <div class="in-chart-box" anvil:dom-node="chart"></div>
+          </div>
+          <div class="ui-card in-card">
+            <h2 class="in-h">What's working for you</h2>
+            <p class="sub" anvil:dom-node="find_sub"></p>
+            <anvil-component type="RepeatingPanel" name="find_panel" prop:item_template="Hookline.Items.Finding" prop:role='["in-find"]'></anvil-component>
+          </div>
+          <div class="ui-card in-card">
+            <h2 class="in-h">Views by format</h2><p class="sub">Average per post · number of posts</p>
+            <anvil-component type="RepeatingPanel" name="fmt_panel" prop:item_template="Hookline.Items.Bar" prop:role='["in-bars"]'></anvil-component>
+            <p class="muted small" anvil:name="fmt_empty">Not enough posts with results yet.</p>
+          </div>
+          <div class="ui-card in-card">
+            <h2 class="in-h">Views by pillar</h2><p class="sub">Average per post · number of posts</p>
+            <anvil-component type="RepeatingPanel" name="pil_panel" prop:item_template="Hookline.Items.Bar" prop:role='["in-bars"]'></anvil-component>
+            <p class="muted small" anvil:name="pil_empty">Not enough posts with results yet.</p>
+          </div>
+          <div class="ui-card in-card">
+            <h2 class="in-h">Views by weekday</h2><p class="sub">Average per post · number of posts</p>
+            <anvil-component type="RepeatingPanel" name="day_panel" prop:item_template="Hookline.Items.Bar" prop:role='["in-bars"]'></anvil-component>
+            <p class="muted small" anvil:name="day_empty">Not enough posts with results yet.</p>
+          </div>
+          <div class="ui-card in-card wide">
+            <h2 class="in-h">Top posts</h2>
+            <p class="sub">Read the first lines: they're your best hooks so far</p>
+            <div class="in-top" role="table" aria-label="Top posts">
+              <div class="in-top-row in-top-head" role="row"><span role="columnheader">First line</span><span class="hide-s" role="columnheader">Posted</span><span class="n" role="columnheader">Views</span><span class="n" role="columnheader">Rate</span></div>
+              <anvil-component type="RepeatingPanel" name="top_panel" prop:item_template="Hookline.Items.TopRow" prop:role='["contents"]'></anvil-component>
+            </div>
+          </div>
+          <div class="ui-card in-card wide" anvil:name="demo_card">
+            <h2 class="in-h">Who sees your posts</h2><p class="sub">From your export</p>
+            <anvil-component type="RepeatingPanel" name="demo_panel" prop:item_template="Hookline.Items.Bar" prop:role='["in-bars"]'></anvil-component>
+          </div>
+          <div class="ui-card in-card wide">
+            <h2 class="in-h">Update your numbers</h2>
+            <p class="sub">Export again whenever you like; Hookline matches posts by their link.</p>
+            <anvil-component type="Hookline.Components.DropFile" name="drop_data"></anvil-component>
+          </div>
+        </div>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

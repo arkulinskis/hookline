@@ -1,0 +1,28 @@
+<div class="ui">
+  <div class="dlg">
+    <anvil-component type="Label" name="title_label" prop:text="Rewrite with AI" prop:role='["dlg-title"]'></anvil-component>
+    <anvil-component type="Label" name="model_label" prop:role='["fine-print"]'></anvil-component>
+    <div anvil:name="draft_part">
+      <label class="ui-field"><span>What's the idea?</span>
+        <anvil-component type="TextArea" name="idea_box" prop:placeholder="The time a client fired me and the one-sentence brief I use now"></anvil-component>
+      </label>
+      <label class="ui-field aw-shape"><span>Shape</span>
+        <anvil-component type="DropDown" name="shape_dd"></anvil-component>
+      </label>
+    </div>
+    <div class="st-ai-acts">
+      <anvil-component type="Button" name="a_draft" prop:text="Draft from an idea" prop:role='["btn", "ic-feather"]'></anvil-component>
+      <anvil-component type="Button" name="a_voice" prop:text="In my voice" prop:role='["btn", "ic-feather"]'></anvil-component>
+      <anvil-component type="Button" name="a_shorter" prop:text="Shorter" prop:role='["btn", "ic-zap"]'></anvil-component>
+      <anvil-component type="Button" name="a_clearer" prop:text="Clearer" prop:role='["btn", "ic-eye"]'></anvil-component>
+      <anvil-component type="Button" name="a_story" prop:text="As a story" prop:role='["btn", "ic-comment"]'></anvil-component>
+      <anvil-component type="Button" name="a_hook" prop:text="Stronger hook" prop:role='["btn", "ic-hook"]'></anvil-component>
+      <anvil-component type="Button" name="a_question" prop:text="End with a question" prop:role='["btn", "ic-chat"]'></anvil-component>
+    </div>
+    <anvil-component type="Label" name="out_label" prop:role='["hl-ai-out"]'></anvil-component>
+    <div class="ui-row end dlg-acts">
+      <anvil-component type="Button" name="keep_button" prop:text="Keep mine" prop:role='["btn", "btn-ghost"]'></anvil-component>
+      <anvil-component type="Button" name="use_button" prop:text="Use this" prop:role='["btn", "btn-primary", "ic-check"]'></anvil-component>
+    </div>
+  </div>
+</div>

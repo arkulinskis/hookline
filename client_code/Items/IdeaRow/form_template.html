@@ -1,0 +1,18 @@
+<div class="ir-host">
+  <div class="id-item" anvil:name="row">
+    <div class="grow">
+      <div class="meta">
+        <span class="ui-badge gold" anvil:dom-node="kind"></span>
+        <span class="hl-chip" anvil:dom-node="chip"><i></i><span anvil:dom-node="chip_name"></span></span>
+        <span class="ui-badge" anvil:dom-node="ex_badge">Example</span>
+        <span anvil:dom-node="ago"></span>
+      </div>
+      <p anvil:dom-node="text"></p>
+    </div>
+    <div class="id-acts">
+      <anvil-component type="Button" name="draft_button" prop:text="Draft it" prop:role='["btn", "btn-sm", "btn-primary", "ic-pen"]'></anvil-component>
+      <anvil-component type="Button" name="used_button" prop:role='["btn", "btn-ghost", "btn-icon", "btn-sm"]'></anvil-component>
+      <anvil-component type="Button" name="del_button" prop:text="Delete idea" prop:role='["btn", "btn-ghost", "btn-icon", "btn-sm", "ic-trash"]'></anvil-component>
+    </div>
+  </div>
+</div>

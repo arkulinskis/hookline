@@ -1,0 +1,142 @@
+<anvil-form layout="Hookline.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="lp">
+      <section class="lp-hero">
+        <div class="ui-wrap">
+          <div class="lp-top">
+            <div><h1>Write posts people <em>finish reading</em>.</h1></div>
+            <div>
+              <p class="lp-lead">Hookline is a free LinkedIn writing studio for posts in your own voice: a hook that survives the “see more” fold, checks that catch what readers skip, a calm calendar and honest analytics. No extension. Nothing posts without you.</p>
+              <div class="lp-cta" anvil:name="guest_cta">
+                <a class="ui-btn primary lg" href="#auth/signup">Start writing, free <i class="ic ic-arrow"></i></a>
+                <a class="ui-btn lg" href="#auth">I have an account</a>
+              </div>
+              <div class="lp-cta" anvil:name="member_cta">
+                <a class="ui-btn primary lg" href="#studio">Open the studio <i class="ic ic-arrow"></i></a>
+              </div>
+              <div class="lp-proof">
+                <span><i class="ic ic-check"></i>No paid plan</span>
+                <span><i class="ic ic-check"></i>No browser extension</span>
+                <span><i class="ic ic-check"></i>You press Post. Always.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lp-studio">
+            <div class="lp-pane">
+              <h2 class="lp-pane-h">1 · Write <span>your words</span></h2>
+              <label class="ui-field">
+                <anvil-component type="TextArea" name="lp_text" prop:role='["lp-text"]'></anvil-component>
+              </label>
+              <span class="lp-type">Type here: the other two update as you go</span>
+            </div>
+            <div class="lp-pane fold">
+              <h2 class="lp-pane-h">2 · The fold
+                <span class="ui-seg" role="group" aria-label="Preview size">
+                  <button type="button" anvil:name="mode_mobile" anvil:on-dom:click="self.mode_mobile_click">Phone</button>
+                  <button type="button" anvil:name="mode_desktop" anvil:on-dom:click="self.mode_desktop_click">Desktop</button>
+                </span>
+              </h2>
+              <anvil-component type="Hookline.Components.FeedPreview" name="preview"></anvil-component>
+            </div>
+            <div class="lp-pane check">
+              <h2 class="lp-pane-h">3 · The check <span>no AI needed</span></h2>
+              <div class="lp-try-score" anvil:name="score_row">
+                <anvil-component type="Hookline.Components.ScoreRing" name="score_ring"></anvil-component>
+                <anvil-component type="Label" name="score_text" prop:role='["lp-score-text"]'></anvil-component>
+              </div>
+              <anvil-component type="RepeatingPanel" name="checks_panel" prop:item_template="Hookline.Items.LpCheck" prop:role='["lp-checks"]'></anvil-component>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lp-section ytf" id="watch">
+        <div class="ui-wrap">
+          <div class="ytf-in">
+            <div class="ytf-copy">
+              <h2>See Hookline in about a minute</h2>
+              <p>A short video tour of what Hookline does and how it works.</p>
+              <a class="ytf-link" href="https://www.youtube.com/watch?v=rgkcyhKM1T8" target="_blank" rel="noopener"><svg viewBox="0 0 28 20" width="20" height="14" aria-hidden="true"><rect width="28" height="20" rx="5" fill="#FF0033"/><path d="M11.2 5.8v8.4l7.3-4.2z" fill="#fff"/></svg>Watch on YouTube &#8599;</a>
+            </div>
+            <div>
+              <div class="ytf-frame" anvil:dom-node="yt_frame">
+                <button type="button" class="ytf-cover" anvil:dom-node="yt_cover" aria-label="Play the Hookline video (1:15)">
+                  <img src="_/theme/yt-cover.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+                  <span class="ytf-play" aria-hidden="true"><svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.5 7.7a8.5 8.5 0 0 0-6-6C55.3.3 34 .3 34 .3s-21.3 0-26.5 1.4a8.5 8.5 0 0 0-6 6C.1 13 .1 24 .1 24s0 11 1.4 16.3a8.5 8.5 0 0 0 6 6c5.2 1.4 26.5 1.4 26.5 1.4s21.3 0 26.5-1.4a8.5 8.5 0 0 0 6-6C67.9 35 67.9 24 67.9 24s0-11-1.4-16.3z" fill="#FF0033"/><path d="M45 24 27 14v20z" fill="#fff"/></svg></span>
+                  <span class="ytf-len">1:15</span>
+                </button>
+              </div>
+              <p class="ytf-note">The video loads from YouTube when you press play.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lp-section" id="how">
+        <div class="ui-wrap">
+          <div class="lp-head"><h2>How it works</h2><p>From a stray thought to a post you're proud of.</p></div>
+          <div class="lp-steps">
+            <div class="ui-card lp-step"><h3>Catch the idea</h3><p class="muted">Answer one guided question about your week, or jot a line in the idea bank. Your experience is the one thing nobody can copy.</p></div>
+            <div class="ui-card lp-step"><h3>Write it well</h3><p class="muted">The hook lab, a live preview cut where LinkedIn cuts it, and a post check for readability, links, hashtags and AI-sounding phrases.</p></div>
+            <div class="ui-card lp-step"><h3>Post and learn</h3><p class="muted">Post with one official click (or copy and open LinkedIn), then import LinkedIn's own analytics export to see what works for you.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lp-section">
+        <div class="ui-wrap">
+          <div class="lp-head"><h2>Everything you need, nothing that risks your account</h2></div>
+          <div class="lp-feats">
+            <div class="lp-feature"><i class="ic ic-hook"></i><h3>Hook lab</h3><p>20 proven hook shapes, scored, and previewed at the phone fold, so your first line lands.</p></div>
+            <div class="lp-feature"><i class="ic ic-check"></i><h3>Post check</h3><p>Reading level, long paragraphs, links in the body, hashtag walls, engagement bait, AI clichés and fake-bold Unicode, with one-click fixes.</p></div>
+            <div class="lp-feature"><i class="ic ic-feather"></i><h3>Your voice</h3><p>Paste your best posts: Hookline measures your style, and with AI it writes a voice card so drafts sound like you.</p></div>
+            <div class="lp-feature"><i class="ic ic-calendar"></i><h3>Calm calendar</h3><p>Drag drafts onto days, see your weekly rhythm and pillar mix. Reminders when it's time: it never posts by itself.</p></div>
+            <div class="lp-feature"><i class="ic ic-chart"></i><h3>Honest insights</h3><p>Import LinkedIn's own analytics file: views over time, best formats, pillars and days, top hooks. No scraping.</p></div>
+            <div class="lp-feature"><i class="ic ic-slides"></i><h3>Carousel maker</h3><p>Turn a post into a PDF carousel in four themes, ready to upload as a document post.</p></div>
+            <div class="lp-feature"><i class="ic ic-bulb"></i><h3>Idea bank</h3><p>Guided questions by kind (stories, lessons, opinions, how-tos, numbers) turn your week into ideas.</p></div>
+            <div class="lp-feature"><i class="ic ic-comment"></i><h3>Comment helper</h3><p>Three thoughtful drafts for someone else's post. You edit and post it yourself.</p></div>
+            <div class="lp-feature"><i class="ic ic-sparkle"></i><h3>AI with your own key</h3><p>Bring a Claude API key and get drafts, rewrites and hooks for cents. It stays in your browser. No key? Everything else still works.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lp-section">
+        <div class="ui-wrap">
+          <div class="lp-head"><h2>What Hookline will never do</h2><p>The shortcuts that get LinkedIn accounts restricted, or make your writing sound like everyone else's.</p></div>
+          <div class="lp-not">
+            <div><i class="ic ic-x"></i><span>Scrape LinkedIn<small>no extension reading your feed</small></span></div>
+            <div><i class="ic ic-x"></i><span>Post on a timer<small>you press the button, every time</small></span></div>
+            <div><i class="ic ic-x"></i><span>Comment or DM for you<small>automated comments are shown less</small></span></div>
+            <div><i class="ic ic-x"></i><span>Hand you viral templates<small>your stories, not someone else's</small></span></div>
+            <div><i class="ic ic-x"></i><span>Store your LinkedIn password<small>official sign-in only</small></span></div>
+            <div><i class="ic ic-x"></i><span>Sell your data or show ads<small>no ads, no trackers</small></span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lp-section">
+        <div class="ui-wrap">
+          <div class="lp-head"><h2>Questions</h2></div>
+          <div class="lp-faq">
+            <details><summary>Is it really free?</summary><p>Yes, every feature. The AI is optional and runs on your own Anthropic key, so you pay Anthropic directly, usually well under a cent per post. That's how Hookline stays free for everyone.</p></details>
+            <details><summary>Will this get my LinkedIn account restricted?</summary><p>Hookline uses only LinkedIn's official API, and only when you press Post now. No browser extension, no stored LinkedIn password, no scraping, no auto-comments or auto-DMs: the things LinkedIn's User Agreement forbids.</p></details>
+            <details><summary>Can it post on a schedule?</summary><p>It reminds you at the time you pick, and you post with one click. LinkedIn's API terms don't allow tools to automate posting, so Hookline doesn't.</p></details>
+            <details><summary>Where do the analytics come from?</summary><p>From you: LinkedIn lets you export your own analytics as a spreadsheet. Drop it into Insights, or log a post's numbers by hand.</p></details>
+            <details><summary>Does it write in French?</summary><p>The AI writes in whatever language you set in your voice. The post checks (reading level, clichés) are tuned for English for now.</p></details>
+            <details><summary>Where is my key stored?</summary><p>Only in your browser. Requests go straight from your browser to Anthropic; Hookline's server never sees the key or your AI prompts.</p></details>
+          </div>
+        </div>
+      </section>
+
+      <section class="lp-section">
+        <div class="ui-wrap">
+          <div class="lp-band">
+            <div><h2>Your next post starts with one line.</h2><p>Make the first line count. It takes a minute to start.</p></div>
+            <a class="ui-btn lg" href="#auth/signup" anvil:name="band_link">Start writing, free</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </anvil-block>
+</anvil-form>

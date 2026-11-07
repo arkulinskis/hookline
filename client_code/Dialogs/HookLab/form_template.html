@@ -1,0 +1,29 @@
+<div class="ui">
+  <div class="dlg">
+    <h2>Hook lab</h2>
+    <p class="muted small">The first line is all most people see. Score it, then try other angles. Pick one to replace your first line.</p>
+    <div class="ui-card flat tight hk-cur">
+      <anvil-component type="Hookline.Components.ScoreRing" name="ring"></anvil-component>
+      <div><b anvil:dom-node="cur"></b><p class="small muted hk-why" anvil:dom-node="why"></p></div>
+    </div>
+    <div class="ui-seg hk-tabs" role="group" aria-label="Where the hooks come from">
+      <button type="button" anvil:name="t_formulas" anvil:on-dom:click="self.t_formulas_click">Formulas</button>
+      <button type="button" anvil:name="t_ai" anvil:on-dom:click="self.t_ai_click"><i class="ic ic-sparkle"></i>AI hooks</button>
+    </div>
+    <div anvil:name="formulas_part">
+      <label class="ui-field hk-topic"><span>Your topic, in a few words</span>
+        <anvil-component type="TextBox" name="topic_box" prop:placeholder="e.g. client onboarding"></anvil-component>
+      </label>
+      <anvil-component type="RepeatingPanel" name="formula_panel" prop:item_template="Hookline.Items.HookPick" prop:role='["st-hook-list"]'></anvil-component>
+    </div>
+    <div anvil:name="ai_part">
+      <anvil-component type="Hookline.Components.AiNudge" name="nudge" prop:what="get six fresh hooks for this post"></anvil-component>
+      <anvil-component type="Label" name="ai_msg" prop:role='["muted-text"]'></anvil-component>
+      <anvil-component type="RepeatingPanel" name="ai_panel" prop:item_template="Hookline.Items.HookPick" prop:role='["st-hook-list"]'></anvil-component>
+      <anvil-component type="Label" name="ai_note" prop:role='["fine-print"]'></anvil-component>
+    </div>
+    <div class="ui-row end dlg-acts">
+      <anvil-component type="Button" name="close_button" prop:text="Close" prop:role='["btn", "btn-ghost"]'></anvil-component>
+    </div>
+  </div>
+</div>

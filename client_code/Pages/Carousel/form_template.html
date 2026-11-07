@@ -1,0 +1,46 @@
+<anvil-form layout="Hookline.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ui-wrap">
+      <div class="ui-empty" anvil:name="missing">
+        <i class="ic ic-slides"></i>
+        <h2>Pick a post first</h2>
+        <p>Open a post in the studio and press Carousel.</p>
+        <a class="ui-btn primary" href="#posts">Your posts</a>
+      </div>
+      <div anvil:name="editor">
+        <div class="ui-page-head">
+          <div>
+            <a class="cr-back" href="#studio" anvil:name="back_link"><i class="ic ic-back"></i>Back to the post</a>
+            <h1>Carousel</h1>
+            <p class="muted">A PDF of square-ish slides (1080×1350). On LinkedIn: Start a post → Add a document → upload it, then paste your text.</p>
+          </div>
+          <div class="ui-row">
+            <anvil-component type="Button" name="regen_button" prop:text="Rebuild from post" prop:role='["btn", "ic-refresh"]'></anvil-component>
+            <anvil-component type="Button" name="pdf_button" prop:text="Download PDF" prop:role='["btn", "ic-download"]'></anvil-component>
+            <anvil-component type="Button" name="lipost_button" prop:text="Post on LinkedIn" prop:role='["btn", "btn-gold", "ic-send"]'></anvil-component>
+            <anvil-component type="Label" name="posted_badge" prop:text="✓ Posted" prop:role='["badge", "badge-good"]'></anvil-component>
+          </div>
+        </div>
+        <div class="cr-grid">
+          <div>
+            <div class="cr-themes" role="group" aria-label="Theme">
+              <anvil-component type="RepeatingPanel" name="themes_panel" prop:item_template="Hookline.Items.ThemeBtn" prop:role='["contents"]'></anvil-component>
+            </div>
+            <label class="ui-field cr-handle"><span>Name on every slide (optional)</span>
+              <anvil-component type="TextBox" name="handle_box"></anvil-component></label>
+            <anvil-component type="RepeatingPanel" name="slides_panel" prop:item_template="Hookline.Items.SlideEdit" prop:role='["cr-slides"]'></anvil-component>
+            <anvil-component type="Button" name="add_button" prop:text="Add slide" prop:role='["btn", "btn-sm", "ic-plus"]'></anvil-component>
+          </div>
+          <div class="cr-prev">
+            <canvas anvil:dom-node="canvas" aria-label="Slide preview" role="img"></canvas>
+            <div class="cr-nav">
+              <anvil-component type="Button" name="prev_button" prop:text="Previous slide" prop:role='["btn", "btn-icon", "btn-sm", "ic-back"]'></anvil-component>
+              <span anvil:dom-node="pos"></span>
+              <anvil-component type="Button" name="next_button" prop:text="Next slide" prop:role='["btn", "btn-icon", "btn-sm", "ic-arrow"]'></anvil-component>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

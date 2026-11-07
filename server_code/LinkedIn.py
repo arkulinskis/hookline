@@ -16,6 +16,7 @@ import secrets
 import urllib.parse
 
 import anvil.server
+from typing import Any
 import anvil.http
 from anvil.tables import app_tables
 
@@ -102,11 +103,11 @@ def li_callback(code=None, state=None, error=None, error_description=None, **kw)
         return _page(False, "That sign-in link expired. Try Connect again.")
     row.update(state="", state_at=None)
     try:
-        tok = anvil.http.request(TOKEN_URL, method="POST", json=True, headers={"Content-Type": "application/x-www-form-urlencoded"},
+        tok: Any = anvil.http.request(TOKEN_URL, method="POST", json=True, headers={"Content-Type": "application/x-www-form-urlencoded"},
                                  data=urllib.parse.urlencode({"grant_type": "authorization_code", "code": C.text(code, 2000),
                                                               "redirect_uri": redirect_uri(), "client_id": _secret("linkedin_client_id"),
                                                               "client_secret": _secret("linkedin_client_secret")}))
-        info = anvil.http.request(USERINFO_URL, json=True, headers={"Authorization": "Bearer " + tok["access_token"]})
+        info: Any = anvil.http.request(USERINFO_URL, json=True, headers={"Authorization": "Bearer " + tok["access_token"]})
     except Exception as e:
         print("linkedin connect failed: %r" % e)
         return _page(False, "LinkedIn didn't accept the connection. Please try again.")
@@ -226,7 +227,7 @@ def li_post_document(media, post_id, title=None):
         return C.fail("The PDF is %.1f MB. Keep carousels under 20 MB (fewer or simpler slides)." % (len(data) / 1048576.0))
     owner = "urn:li:person:" + row["sub"]
     try:
-        init = anvil.http.request(DOCS_INIT_URL, method="POST", json=True, headers=_headers(row),
+        init: Any = anvil.http.request(DOCS_INIT_URL, method="POST", json=True, headers=_headers(row),
                                   data=json.dumps({"initializeUploadRequest": {"owner": owner}}))
         value = (init or {}).get("value") or {}
         upload_url, doc = value.get("uploadUrl"), value.get("document")

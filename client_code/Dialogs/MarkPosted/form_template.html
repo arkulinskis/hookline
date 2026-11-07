@@ -1,0 +1,16 @@
+<div class="ui">
+  <div class="dlg">
+    <h2>Did you post it?</h2>
+    <p class="muted small">Mark it as posted so it counts in your calendar and insights. Paste the link to match it with LinkedIn's analytics later.</p>
+    <label class="ui-field"><span>Post link (optional)</span>
+      <anvil-component type="TextBox" name="url_box" prop:placeholder="https://www.linkedin.com/feed/update/urn:li:activity:…"></anvil-component>
+    </label>
+    <div anvil:name="fc_row" class="mp-fc">
+      <anvil-component type="Button" name="fc_button" prop:text="Copy first comment" prop:role='["btn", "btn-sm", "ic-copy"]'></anvil-component>
+    </div>
+    <div class="ui-row end dlg-acts">
+      <anvil-component type="Button" name="no_button" prop:text="Not yet" prop:role='["btn", "btn-ghost"]'></anvil-component>
+      <anvil-component type="Button" name="yes_button" prop:text="Yes, posted" prop:role='["btn", "btn-primary", "ic-check"]'></anvil-component>
+    </div>
+  </div>
+</div>

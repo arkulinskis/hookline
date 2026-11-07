@@ -1,0 +1,49 @@
+<anvil-form layout="Hookline.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ui-wrap">
+      <div class="ui-page-head">
+        <div>
+          <h1>Calendar</h1>
+          <div class="muted cl-sub"><span anvil:dom-node="target_text"></span> · <a href="#voice/rhythm">change</a></div>
+        </div>
+        <a class="ui-btn primary" href="#studio/new"><i class="ic ic-plus"></i>New post</a>
+      </div>
+      <div class="cl-wrap">
+        <div>
+          <div class="cl-head">
+            <anvil-component type="Button" name="prev_button" prop:text="Previous month" prop:role='["btn", "btn-icon", "ic-back"]'></anvil-component>
+            <anvil-component type="Label" name="month_label" prop:role='["cl-month"]'></anvil-component>
+            <anvil-component type="Button" name="next_button" prop:text="Next month" prop:role='["btn", "btn-icon", "ic-arrow"]'></anvil-component>
+            <anvil-component type="Button" name="today_button" prop:text="Today" prop:role='["btn", "btn-sm"]'></anvil-component>
+          </div>
+          <div class="cl-grid">
+            <div class="cl-dow">Wk</div><div class="cl-dow">Mon</div><div class="cl-dow">Tue</div><div class="cl-dow">Wed</div><div class="cl-dow">Thu</div><div class="cl-dow">Fri</div><div class="cl-dow">Sat</div><div class="cl-dow">Sun</div>
+            <anvil-component type="RepeatingPanel" name="weeks_panel" prop:item_template="Hookline.Items.CalWeek" prop:role='["contents"]'></anvil-component>
+          </div>
+        </div>
+        <aside class="cl-side">
+          <div class="ui-card">
+            <h2 class="cl-h">Drafts to place</h2>
+            <p class="small muted" anvil:name="drafts_hint">Drag one onto a day, or press the clock.</p>
+            <anvil-component type="RepeatingPanel" name="drafts_panel" prop:item_template="Hookline.Items.CalDraft"></anvil-component>
+            <p class="small muted" anvil:name="no_drafts">No drafts. <a href="#ideas">Turn an idea into one.</a></p>
+          </div>
+          <div class="ui-card">
+            <h2 class="cl-h">Pillar mix this month</h2>
+            <div class="cl-mix" anvil:dom-node="mix"></div>
+            <p class="small muted" anvil:name="no_mix">Nothing this month yet.</p>
+            <anvil-component type="RepeatingPanel" name="mix_panel" prop:item_template="Hookline.Items.MixRow"></anvil-component>
+          </div>
+          <div class="ui-card">
+            <h2 class="cl-h">Your best times</h2>
+            <div anvil:name="times_part">
+              <anvil-component type="RepeatingPanel" name="times_panel" prop:item_template="Hookline.Items.TimeRow" prop:role='["cl-times"]'></anvil-component>
+              <anvil-component type="Label" name="times_note" prop:role='["fine-print"]'></anvil-component>
+            </div>
+            <p class="small muted" anvil:name="no_times">After 8 posts with results logged, Hookline shows which days and hours work for <i>your</i> audience. Until then, post when your audience is at work, and stay consistent.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

@@ -1,0 +1,144 @@
+<anvil-form layout="Hookline.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ui-wrap vc-sec">
+      <div class="ui-page-head"><div><h1>Voice &amp; settings</h1><p class="muted">Make it sound like you.</p></div></div>
+      <nav class="ui-tabs" aria-label="Settings">
+        <a href="#voice/voice" anvil:name="tab_voice"><i class="ic ic-feather"></i>Your voice</a>
+        <a href="#voice/rhythm" anvil:name="tab_rhythm"><i class="ic ic-target"></i>Pillars &amp; rhythm</a>
+        <a href="#voice/ai" anvil:name="tab_ai"><i class="ic ic-sparkle"></i>AI</a>
+        <a href="#voice/linkedin" anvil:name="tab_linkedin"><i class="ic ic-linkedin"></i>LinkedIn</a>
+      </nav>
+
+      <div class="ui-stack" anvil:name="voice_part">
+        <div class="ui-card">
+          <h2 class="vc-h">About you</h2>
+          <p class="muted small">Used by the AI (if you add a key) and in the preview headline.</p>
+          <label class="ui-field"><span>What you do, in a sentence or two</span>
+            <anvil-component type="TextArea" name="about_box" prop:placeholder="Freelance UX designer in Montréal. I help SaaS teams fix onboarding."></anvil-component></label>
+          <div class="ui-grid two vc-two">
+            <label class="ui-field"><span>Who you write for</span><anvil-component type="TextBox" name="audience_box" prop:placeholder="Founders and product managers"></anvil-component></label>
+            <label class="ui-field"><span>Language of your posts</span><anvil-component type="TextBox" name="language_box"></anvil-component></label>
+          </div>
+        </div>
+        <div class="ui-card">
+          <h2 class="vc-h">Your past posts</h2>
+          <anvil-component type="Label" name="samples_intro" prop:role='["fine-print"]'></anvil-component>
+          <anvil-component type="TextArea" name="new_sample_box" prop:placeholder="Paste one post, then press Add. Or paste several separated by a line with ---"></anvil-component>
+          <div class="ui-row vc-add">
+            <anvil-component type="Button" name="add_sample_button" prop:text="Add" prop:role='["btn", "ic-plus"]'></anvil-component>
+            <anvil-component type="Label" name="samples_count" prop:role='["fine-print"]'></anvil-component>
+          </div>
+          <anvil-component type="RepeatingPanel" name="samples_panel" prop:item_template="Hookline.Items.Sample" prop:role='["vc-samples"]'></anvil-component>
+          <div anvil:name="stats_part">
+            <div class="vc-stats">
+              <div><b anvil:dom-node="s_chars"></b><span>characters per post</span></div>
+              <div><b anvil:dom-node="s_words"></b><span>words per sentence</span></div>
+              <div><b anvil:dom-node="s_hook"></b><span>characters in first lines</span></div>
+              <div><b anvil:dom-node="s_emoji"></b><span>emoji per post</span></div>
+              <div><b anvil:dom-node="s_tags"></b><span>hashtags per post</span></div>
+              <div><b anvil:dom-node="s_q"></b><span>end on a question</span></div>
+              <div><b anvil:dom-node="s_grade"></b><span>reading grade</span></div>
+            </div>
+            <anvil-component type="Label" name="summary_label"></anvil-component>
+          </div>
+          <div class="vc-card" anvil:name="card_part">
+            <h2 class="vc-h" anvil:name="card_head">Your voice card</h2>
+            <anvil-component type="Label" name="card_summary"></anvil-component>
+            <anvil-component type="RepeatingPanel" name="card_panel" prop:item_template="Hookline.Items.CardList"></anvil-component>
+            <anvil-component type="Button" name="card_button" prop:text="Write my voice card" prop:role='["btn", "btn-sm", "ic-sparkle"]'></anvil-component>
+          </div>
+        </div>
+        <div class="ui-card">
+          <h2 class="vc-h">Words you never use</h2>
+          <p class="muted small">The AI avoids them, and the post check flags them. Comma separated.</p>
+          <anvil-component type="TextBox" name="banned_box" prop:placeholder="synergy, ninja, crushing it"></anvil-component>
+        </div>
+        <div class="ui-card">
+          <h2 class="vc-h">Tone</h2>
+          <div class="vc-range"><span>Casual</span><input type="range" min="0" max="100" step="5" anvil:dom-node="tone_formal" aria-label="Casual to Formal"><span class="vc-r">Formal</span></div>
+          <div class="vc-range"><span>Serious</span><input type="range" min="0" max="100" step="5" anvil:dom-node="tone_playful" aria-label="Serious to Playful"><span class="vc-r">Playful</span></div>
+          <div class="vc-range"><span>Gentle</span><input type="range" min="0" max="100" step="5" anvil:dom-node="tone_bold" aria-label="Gentle to Bold"><span class="vc-r">Bold</span></div>
+          <div class="vc-range"><span>Cool</span><input type="range" min="0" max="100" step="5" anvil:dom-node="tone_warm" aria-label="Cool to Warm"><span class="vc-r">Warm</span></div>
+        </div>
+        <div class="ui-row end">
+          <anvil-component type="Button" name="save_voice_button" prop:text="Save voice" prop:role='["btn", "btn-primary", "ic-check"]'></anvil-component>
+        </div>
+      </div>
+
+      <div class="ui-stack" anvil:name="rhythm_part">
+        <div class="ui-card">
+          <h2 class="vc-h">Content pillars</h2>
+          <p class="muted small">The 3 to 5 themes you're known for, and roughly how often each should come up. The calendar shows how close you are.</p>
+          <anvil-component type="RepeatingPanel" name="pillars_panel" prop:item_template="Hookline.Items.PillarEdit"></anvil-component>
+          <div class="ui-row">
+            <anvil-component type="Button" name="add_pillar_button" prop:text="Add pillar" prop:role='["btn", "btn-sm", "ic-plus"]'></anvil-component>
+            <anvil-component type="Label" name="total_label" prop:role='["fine-print"]'></anvil-component>
+          </div>
+        </div>
+        <div class="ui-card">
+          <h2 class="vc-h">Rhythm</h2>
+          <label class="ui-field vc-cad"><span>Posts per week</span><anvil-component type="TextBox" name="cadence_box" prop:type="number"></anvil-component></label>
+          <p class="small muted">Large studies of LinkedIn posts (Buffer, 2M+ posts) found that posting more often brings more views per post, with diminishing returns. A rhythm you can keep beats a burst.</p>
+          <anvil-component type="CheckBox" name="reminders_box" prop:text="Email me when a scheduled post is due"></anvil-component>
+        </div>
+        <div class="ui-row end">
+          <anvil-component type="Button" name="save_rhythm_button" prop:text="Save" prop:role='["btn", "btn-primary", "ic-check"]'></anvil-component>
+        </div>
+      </div>
+
+      <div class="ui-stack" anvil:name="ai_part">
+        <div class="ui-card">
+          <h2 class="vc-h">Your own Claude API key</h2>
+          <p class="muted small">Hookline is free because you bring the AI. Your key is saved <b>only in this browser</b> and sent straight to Anthropic: Hookline's server never sees it or your drafts. A post costs well under a cent.</p>
+          <ol class="small vc-steps"><li>Go to the Claude Console (console.anthropic.com) → API keys → Create key.</li><li>Add a little credit under Billing (and a monthly limit if you like).</li><li>Paste the key here.</li></ol>
+          <label class="ui-field"><span>API key</span><anvil-component type="TextBox" name="key_box" prop:hide_text="true" prop:placeholder="sk-ant-…"></anvil-component></label>
+          <div class="vc-models">
+            <anvil-component type="RadioButton" name="model0" prop:group_name="hl-model"></anvil-component>
+            <anvil-component type="RadioButton" name="model1" prop:group_name="hl-model"></anvil-component>
+            <anvil-component type="RadioButton" name="model2" prop:group_name="hl-model"></anvil-component>
+          </div>
+          <div class="ui-row vc-key-acts">
+            <anvil-component type="Button" name="save_key_button" prop:text="Save" prop:role='["btn", "btn-primary", "ic-check"]'></anvil-component>
+            <anvil-component type="Button" name="test_key_button" prop:text="Test it" prop:role='["btn", "ic-zap"]'></anvil-component>
+            <anvil-component type="Button" name="forget_button" prop:text="Forget key" prop:role='["btn", "btn-ghost", "btn-danger"]'></anvil-component>
+          </div>
+          <anvil-component type="Label" name="test_label" prop:role='["vc-test"]'></anvil-component>
+        </div>
+        <div class="ui-card">
+          <h2 class="vc-h">What the AI does here</h2>
+          <p class="small muted">Drafts from your ideas, rewrites in your voice, hooks, comment drafts, repurposing and carousel slides, using your voice card and rules (no invented facts: it leaves [brackets] for you). It never posts anything. Without a key, every page still works with the built-in coach.</p>
+        </div>
+      </div>
+
+      <div class="ui-stack" anvil:name="linkedin_part">
+        <anvil-component type="Label" name="li_ok" prop:text="LinkedIn is connected." prop:role='["msg-ok"]'></anvil-component>
+        <anvil-component type="Label" name="li_error" prop:role='["msg-error"]'></anvil-component>
+        <div class="ui-card">
+          <h2 class="vc-h">Post with one click</h2>
+          <div class="vc-li" anvil:name="li_connected">
+            <img anvil:dom-node="li_pic" alt="" width="52" height="52">
+            <span class="av" anvil:dom-node="li_av"><i class="ic ic-user"></i></span>
+            <div>
+              <b anvil:dom-node="li_name"></b>
+              <div class="small muted" anvil:dom-node="li_days"></div>
+              <div class="vc-meter"><i anvil:dom-node="li_meter"></i></div>
+            </div>
+            <span class="ui-spacer"></span>
+            <anvil-component type="Button" name="reconnect_button" prop:text="Reconnect" prop:role='["btn", "btn-gold", "ic-refresh"]'></anvil-component>
+            <anvil-component type="Button" name="disconnect_button" prop:text="Disconnect" prop:role='["btn", "btn-ghost"]'></anvil-component>
+          </div>
+          <p class="small muted vc-li-note" anvil:name="li_note">LinkedIn connections last 60 days; we'll remind you before it runs out.</p>
+          <div anvil:name="li_connect_part">
+            <p class="muted small">Connect through LinkedIn's official sign-in. Hookline gets permission to publish posts <b>only when you press Post now</b>. It can't read your messages, connections or feed, and it never posts on its own.</p>
+            <anvil-component type="Button" name="connect_button" prop:text="Connect LinkedIn" prop:role='["btn", "btn-gold", "ic-linkedin"]'></anvil-component>
+          </div>
+          <p class="muted small" anvil:name="li_off">One-click posting isn't switched on for this Hookline yet. You can still post everything with <b>Copy and open LinkedIn</b>: Hookline copies your post and opens LinkedIn's share box.</p>
+        </div>
+        <div class="ui-card">
+          <h2 class="vc-h">Why no auto-posting and no extension?</h2>
+          <p class="small muted">LinkedIn's API terms don't allow tools to automate posting, and its User Agreement bans browser add-ons that scrape or act for you. Tools that ignored this have had accounts restricted and extensions shut down. Hookline stays on the official, safe side: you schedule, it reminds you, you press the button.</p>
+        </div>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

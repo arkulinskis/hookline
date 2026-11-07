@@ -1,0 +1,15 @@
+<div class="ui">
+  <div class="dlg">
+    <h2>Post it on LinkedIn</h2>
+    <anvil-component type="Label" name="bad_label" prop:role='["msg-error"]'></anvil-component>
+    <div class="pi-preview"><anvil-component type="Hookline.Components.FeedPreview" name="preview"></anvil-component></div>
+    <anvil-component type="Label" name="li_label" prop:role='["fine-print"]'></anvil-component>
+    <anvil-component type="Label" name="then_label" prop:text="Then: add your first comment (we'll copy it for you)." prop:role='["small-text"]'></anvil-component>
+    <div class="ui-row end dlg-acts">
+      <anvil-component type="Button" name="copyopen_button" prop:text="Copy and open LinkedIn" prop:role='["btn", "ic-copy"]'></anvil-component>
+      <anvil-component type="Button" name="apicar_button" prop:text="Post with the carousel" prop:role='["btn", "btn-gold", "ic-slides"]'></anvil-component>
+      <anvil-component type="Button" name="api_button" prop:text="Post now" prop:role='["btn", "btn-gold", "ic-send"]'></anvil-component>
+    </div>
+    <p class="small faint pi-connect" anvil:name="connect_hint">Want one-click posting? <a href="#voice/linkedin" anvil:dom-node="connect_link">Connect LinkedIn</a> (official, no password shared).</p>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+<div class="ui">
+  <div class="dlg">
+    <h2>Schedule it</h2>
+    <p class="muted small">Hookline reminds you at that time (by email and in the app). LinkedIn's rules don't allow tools to post on a timer, so you press the button: it takes 10 seconds.</p>
+    <div class="ui-row sc-slots">
+      <anvil-component type="Button" name="slot0" prop:role='["btn", "btn-sm"]'></anvil-component>
+      <anvil-component type="Button" name="slot1" prop:role='["btn", "btn-sm"]'></anvil-component>
+      <anvil-component type="Button" name="slot2" prop:role='["btn", "btn-sm"]'></anvil-component>
+      <anvil-component type="Button" name="slot3" prop:role='["btn", "btn-sm"]'></anvil-component>
+    </div>
+    <label class="ui-field"><span>Date and time</span>
+      <anvil-component type="TextBox" name="when_box"></anvil-component>
+    </label>
+    <div class="ui-row end dlg-acts">
+      <anvil-component type="Button" name="unsched_button" prop:text="Unschedule" prop:role='["btn", "btn-ghost"]'></anvil-component>
+      <span class="ui-spacer"></span>
+      <anvil-component type="Button" name="cancel_button" prop:text="Cancel" prop:role='["btn", "btn-ghost"]'></anvil-component>
+      <anvil-component type="Button" name="ok_button" prop:text="Schedule" prop:role='["btn", "btn-primary", "ic-calendar"]'></anvil-component>
+    </div>
+  </div>
+</div>
