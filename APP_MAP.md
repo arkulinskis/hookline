@@ -7,7 +7,7 @@ around them with an offset instead of whole files.
 
 **What it is:** A free LinkedIn writing studio: hooks that survive the see-more fold, posts in your own voice, a calm calendar and honest analytics. Optional AI.
 **Live:** https://hookline.anvil.app · **Repo:** github.com/arkulinskis/hookline · **Layout:** native Anvil Forms · **Deploy:** master
-**Guide** (workflow, design rules, product knowledge): `hookline/.claude/skills/hookline/SKILL.md`
+**Guide** (workflow, design rules, product knowledge): `.claude/skills/hookline/SKILL.md`
 
 ## How to change it
 
