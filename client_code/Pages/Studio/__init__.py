@@ -258,7 +258,7 @@ class Studio(StudioTemplate):
             state.toast("Moved to the first comment", "ok")
 
     def _key(self, event):
-        if (event.ctrlKey or event.metaKey) and str(event.key).lower() == "s":
+        if (getattr(event, "ctrlKey", False) or getattr(event, "metaKey", False)) and str(getattr(event, "key", None)).lower() == "s":
             node = anvil.js.get_dom_node(self)
             if node.contains(window.document.activeElement):
                 event.preventDefault()
