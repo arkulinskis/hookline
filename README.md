@@ -45,7 +45,7 @@ LinkedIn password.
 **For everyone:** a landing page with a live fold tester, sign-up with email and password or Google, a feedback form ("Send
 feedback" in the footer and menu), and the Privacy & Terms page (footer link, `#legal`).
 
-**For admins** (`#admin`; arkulinskis@gmail.com becomes an admin on first sign-in):
+**For admins** (`#admin`; your admin email (App Secret `admin_emails`) becomes an admin on first sign-in):
 - **Overview:** people, posts (posted), ideas, LinkedIn connections, new feedback.
 - **LinkedIn:** setup steps with the exact redirect URL, status, number connected, and the LinkedIn-Version header (YYYYMM).
 - **Feedback inbox**, **Users**, **Demo data** (a demo person with the examples; "Remove" deletes every example row).
@@ -57,7 +57,7 @@ feedback" in the footer and menu), and the Privacy & Terms page (footer link, `#
 3. **Email** service (reminders) and **App Secrets** service: check they're there.
 4. Open the app in the editor. If it shows a **Schema Mismatch** alert, choose **"The schema of the source code is correct"** so Anvil creates the tables.
 5. **Scheduled Tasks**: `send_reminders` every 15 minutes is in `anvil.yaml` (needs a paid Anvil plan; without one, reminders still show in the app as a "due now" banner).
-6. **Run** it and sign up with **arkulinskis@gmail.com** straight away (that account becomes the admin).
+6. **Run** it and sign up with **your admin email** (App Secret `admin_emails`) straight away (that account becomes the admin).
 7. **Publish**. Optional one-click posting: follow Admin → LinkedIn (a LinkedIn developer app with "Sign In with LinkedIn using OpenID Connect" + "Share on LinkedIn", the redirect URL, and App Secrets `linkedin_client_id` / `linkedin_client_secret`).
 
 <!-- libraries:start -->

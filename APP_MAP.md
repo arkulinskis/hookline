@@ -32,7 +32,7 @@ around them with an offset instead of whole files.
 - **Items talk to their page** through `item["host"]` (Calendar days/posts/drafts, IdeaRow, Sample, PillarEdit, SlideEdit); PillarEdit/SlideEdit store themselves in `item["form"]` so the page reads/updates rows without redrawing (cursor stays). Calendar drag and drop = native DOM events on CalPost/CalDraft/CalDay with `host.drag_id`.
 - **Grids made of panels**: the calendar grid (8 columns) is `weeks_panel` (role `contents`) → CalWeek host (`display: contents`) → `days_panel` → CalDay. Hosts that must vanish are listed in app.css (`.seg-host, .cw-host, .cd-host, .cp-host, .top-host`).
 - **Server fix in the conversion**: `Studio.add_examples` counted nothing (`if app_tables.posts.search(...)`: a SearchIterator is always truthy, hosted Anvil too), so "Load example posts" never loaded; now `len(...)`.
-- Design (facelift): eyebrows folded into headings/leads, radial hero glows and the calendar side-tab removed, feed placeholder stripes gone, the Ideas prompt card is fixed navy in both themes, `--c-faint`/`--c-accent` darkened to 4.5:1. Smoke test: `python -I tools/ui_test.py` (tools/ui/smoke.js, 1280 + 390 px; the admin is arkulinskis@gmail.com, first sign-up becomes admin).
+- Design (facelift): eyebrows folded into headings/leads, radial hero glows and the calendar side-tab removed, feed placeholder stripes gone, the Ideas prompt card is fixed navy in both themes, `--c-faint`/`--c-accent` darkened to 4.5:1. Smoke test: `python -I tools/ui_test.py` (tools/ui/smoke.js, 1280 + 390 px; the admin is your admin email (App Secret `admin_emails`), first sign-up becomes admin).
 <!-- /NOTES -->
 
 ## Pages (`client_code/router.py`)
