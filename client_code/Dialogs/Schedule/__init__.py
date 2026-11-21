@@ -40,9 +40,34 @@ class Schedule(ScheduleTemplate):
                 self.slot_values.append("")
         self.when_box.text = hl.local_input(post.get("scheduled_at")) or (self.slot_values[0] if slots else "")
         self.unsched_button.visible = post.get("status") == "scheduled"
+        self.pid = post.get("id")
+        self.others = [p for p in posts if p.get("id") != self.pid and p.get("status") in ("scheduled", "posted") and hl.when(p)]
+        state.control(self.when_box).addEventListener("input", lambda e: self._check_gap())
+        self._check_gap()
+
+    def _check_gap(self):
+        """A soft note when the chosen time is within 12 hours of another scheduled or posted post (never blocks)."""
+        v = state.control(self.when_box).value
+        chosen = hl.time_ms(hl.from_local(str(v))) if v else 0
+        near, gap = None, None
+        if chosen:
+            for p in self.others:
+                d = abs(hl.time_ms(hl.when(p)) - chosen)
+                if d < 12 * 3600 * 1000 and (gap is None or d < gap):
+                    near, gap = p, d
+        self.gap_note.visible = near is not None
+        if near is not None and gap is not None:
+            hours = int(round(gap / 3600000.0))
+            when = "less than an hour" if hours < 1 else state.plural(hours, "hour")
+            side = "before" if hl.time_ms(hl.when(near)) < chosen else "after"
+            what = "goes out" if near.get("status") == "scheduled" else "went out"
+            self.gap_note.text = ("Another post %s %s %s this one (“%s”). Posts close together compete for the same "
+                                  "readers: about a day apart works better. You can still schedule it."
+                                  % (what, when, side, hl.hook(near.get("text"))[:50]))
 
     def _slot(self, i):
         self.when_box.text = self.slot_values[i]
+        self._check_gap()
 
     @handle("slot0", "click")
     def slot0_click(self, **event_args):

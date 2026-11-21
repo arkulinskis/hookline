@@ -91,6 +91,8 @@ class Studio(StudioTemplate):
         self.post_button.visible = not posted
         self.post_button.text = "Post now" if li.get("connected") else "Post on LinkedIn"
         self.metrics_button.visible = posted
+        fresh = posted and bool(p.get("posted_at")) and hl.now_ms() - hl.time_ms(p.get("posted_at")) < 24 * 3600 * 1000
+        self.launch_button.visible = bool(fresh)
         self.markposted_button.visible = not posted and bool(p.get("id"))
         self.delete_button.visible = bool(p.get("id"))
         self.update()
@@ -123,6 +125,31 @@ class Studio(StudioTemplate):
             self.score_text.text = ("Write a few lines and Hookline checks the hook, the fold, readability, links, "
                                     "hashtags and AI-sounding phrases.")
             self.checks_panel.items = []
+        self._update_voice(t)
+
+    def _update_voice(self, t):
+        """The "Sounds like you" card: the draft against your past posts and banned words, plus AI-ish patterns."""
+        voice = (self.ws.get("profile") or {}).get("voice") or {}
+        try:
+            vm = hl.voice_match(t, voice)
+        except Exception as e:  # the check must never stop the editor
+            print("voice match failed: %r" % e)
+            vm = {"score": 0, "ready": False, "samples": 0, "items": []}
+        has = bool(t.strip())
+        self.voice_note.visible = not vm.get("ready")
+        self.voice_ring.visible = has
+        self.voice_title.text = "Sounds like you" if vm.get("ready") else "Sounds human"
+        if has:
+            self.voice_ring.set(vm["score"], "Sounds like you" if vm.get("ready") else "Sounds human")
+            todo = len([i for i in vm["items"] if i["level"] != "good"])
+            base = ("Compared with your %s." % state.plural(vm.get("samples") or 0, "past post")) if vm.get("ready") \
+                else "Checked for patterns readers link with AI."
+            self.voice_text.text = base + ((" %s to look at." % state.plural(todo, "thing")) if todo else " Nothing to change.")
+            self.voice_panel.items = vm["items"]
+        else:
+            self.voice_text.text = ("LinkedIn shows generic, AI-sounding posts to fewer people. This card checks that your "
+                                    "draft still sounds like a person: you.")
+            self.voice_panel.items = []
 
     def _expanded(self):
         self.expanded = True
@@ -364,14 +391,16 @@ class Studio(StudioTemplate):
                 state.toast("Posted on LinkedIn.", "ok")
                 if self.post.get("first_comment"):
                     hl.copy(self.post["first_comment"], "First comment copied: paste it under your post.")
-                self.draw()
+                self.dirty = False
+                router.go("launch", self.post["id"])
         elif action == "apicar":
             if self.save() is None:
                 return
             p2 = hl.post_carousel(self.post)
             if p2:
                 self.post = dict(p2)
-                self.draw()
+                self.dirty = False
+                router.go("launch", self.post["id"])
 
     def _ask_posted(self):
         self.markposted_button_click()
@@ -388,8 +417,14 @@ class Studio(StudioTemplate):
         if r:
             self.post = dict(r["post"])
             hl.put_post(r["post"])
-            state.toast("Nice. Log the results in a day or two.", "ok")
-            self.draw()
+            state.toast("Nice. Now the first hour: replies count most.", "ok")
+            self.dirty = False
+            router.go("launch", self.post["id"])
+
+    @handle("launch_button", "click")
+    def launch_button_click(self, **event_args):
+        if self.post.get("id"):
+            router.go("launch", self.post["id"])
 
     @handle("metrics_button", "click")
     def metrics_button_click(self, **event_args):

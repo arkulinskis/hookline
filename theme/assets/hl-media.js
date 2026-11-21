@@ -88,6 +88,58 @@
     }
   };
   HL.carouselPdf = function (post, me) { return pdfFile(post, fromPostOrSaved(post), me); };   // also for tests
+
+  /* Month recap card (2026-11-20): 1080x1350, navy and gold, drawn from Dialogs/Recap's data
+     {label, name, site, stats: [[value, label] x4], hook, best_note, extra}. Download = PNG. */
+  function box(c, x, y, w, h, r) {
+    c.beginPath();
+    if (c.roundRect) c.roundRect(x, y, w, h, r); else c.rect(x, y, w, h);
+    c.fill();
+  }
+  function recap(canvas, d) {
+    var c = canvas.getContext('2d'), W = 1080, H = 1350, P = 96, th = THEMES.navy, serif = '"DM Serif Display", Georgia, serif', sans = '"DM Sans", sans-serif';
+    canvas.width = W; canvas.height = H;
+    c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+    c.fillStyle = th.bg; c.fillRect(0, 0, W, H);
+    c.fillStyle = th.accent; c.fillRect(P, P, 120, 10);
+    c.fillStyle = th.sub; c.font = '600 34px ' + sans; c.fillText('My LinkedIn month', P, P + 86);
+    var size = 104; c.font = '400 ' + size + 'px ' + serif;
+    while (c.measureText(d.label || '').width > W - 2 * P && size > 56) { size -= 6; c.font = '400 ' + size + 'px ' + serif; }
+    c.fillStyle = th.ink; c.fillText(d.label || '', P, P + 86 + size * 1.08);
+    var gx = 32, bw = (W - 2 * P - gx) / 2, bh = 200, y0 = P + 290;
+    (d.stats || []).slice(0, 4).forEach(function (s, i) {
+      var x = P + (i % 2) * (bw + gx), y = y0 + Math.floor(i / 2) * (bh + gx);
+      c.fillStyle = 'rgba(255,255,255,0.07)'; box(c, x, y, bw, bh, 24);
+      var vs = 92; c.font = '400 ' + vs + 'px ' + serif;
+      while (c.measureText(String(s[0])).width > bw - 64 && vs > 40) { vs -= 6; c.font = '400 ' + vs + 'px ' + serif; }
+      c.fillStyle = i === 0 ? th.accent : th.ink; c.fillText(String(s[0]), x + 32, y + 32 + vs * 0.92);
+      c.fillStyle = th.sub; c.font = '500 30px ' + sans; c.fillText(String(s[1]), x + 32, y + bh - 34);
+    });
+    var y = y0 + 2 * bh + gx + 92;
+    if (d.hook) {
+      c.fillStyle = th.accent; c.font = '600 30px ' + sans;
+      c.fillText('Best opener' + (d.best_note ? ' · ' + d.best_note : ''), P, y);
+      c.font = '400 50px ' + serif; c.fillStyle = th.ink;
+      var lines = wrap(c, '“' + d.hook + '”', W - 2 * P);
+      var max = d.extra ? 3 : 4;
+      if (lines.length > max) { lines = lines.slice(0, max); lines[max - 1] = lines[max - 1].replace(/\s*\S*$/, '') + '…”'; }
+      y += 72; lines.forEach(function (l) { c.fillText(l, P, y); y += 62; });
+    }
+    c.fillStyle = th.sub; c.font = '500 30px ' + sans;
+    if (d.extra) c.fillText(d.extra, P, H - P - 64);
+    c.fillStyle = 'rgba(255,255,255,0.14)'; c.fillRect(P, H - P - 30, W - 2 * P, 2);
+    c.fillStyle = th.sub; c.font = '600 30px ' + sans; c.fillText(d.name || '', P, H - P + 18);
+    c.textAlign = 'right'; c.fillStyle = th.accent; c.fillText(d.site || '', W - P, H - P + 18); c.textAlign = 'left';
+  }
+  window.HLR = {
+    render: function (canvas, dataJson) {
+      var go = function () { recap(canvas, JSON.parse(dataJson)); };
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(go); else go();
+    },
+    download: function (canvas, name) {
+      canvas.toBlob(function (blob) { if (blob) window.HLC.download(new File([blob], name || 'recap.png', { type: 'image/png' })); }, 'image/png');
+    }
+  };
 })();
 
 (function () {

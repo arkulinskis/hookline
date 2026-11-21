@@ -107,12 +107,21 @@
     }
     await open('#insights', /Impressions over time/);
     if (!$('.in-chart-box svg')) bad.push('#insights: no line chart');
+    await open('#calendar', /Your rhythm/);
+    const rb = button(/Month recap/);
+    if (rb) {
+      rb.click(); await sleep(1500);
+      if (errs.length) bad.push('#calendar recap: ' + errs.splice(0).join(' / '));
+      const cb = button(/^\s*Close\s*$/); if (cb) cb.click(); await sleep(400);
+    } else bad.push('#calendar: no Month recap button');
     await open('#ideas', /Answer one question/);
     for (const t of ['hooks', 'repurpose', 'comments', 'clean']) await open('#lab/' + t, /Lab/);
     for (const t of ['voice', 'rhythm', 'ai', 'linkedin']) await open('#voice/' + t, /Voice/);
     await open('#carousel/' + postHash.split('/')[1], /Carousel/);
     if (!$('.cr-prev canvas') || !$('.cr-prev canvas').width) bad.push('#carousel: the slide wasn\'t drawn');
     await open(postHash, /Edit your post/);
+    if (!/Sounds (like you|human)/.test(($('.st-voice') || {}).innerText || '')) bad.push('#studio: no "Sounds like you" card');
+    await open('#launch/' + postHash.split('/')[1], /posted yet|first hour/);
     await open('#profile', /Your name/);
     await open('#landing', /Open the studio/);
     await signOut();

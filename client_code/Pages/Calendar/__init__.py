@@ -103,6 +103,7 @@ class Calendar(CalendarTemplate):
         mix.style.display = "flex" if month_posts else "none"
         self.no_mix.visible = not month_posts
         self.mix_panel.items = rows
+        self._draw_rhythm()
         bt = self.best_times()
         self.times_part.visible = bool(bt)
         self.no_times.visible = not bt
@@ -110,6 +111,36 @@ class Calendar(CalendarTemplate):
             self.times_panel.items = ([{"label": d[0], "value": hl.fmt_num(d[1]) + " avg views"} for d in bt["days"]] +
                                       [{"label": h[0], "value": hl.fmt_num(h[1]) + " avg views"} for h in bt["hours"]])
             self.times_note.text = "From your %d posts with results. Patterns firm up after a few months." % bt["n"]
+
+    def _draw_rhythm(self):
+        """Weeks in a row on target (one rest week in four is free), the last 8 weeks as dots, and the recap button."""
+        r = hl.rhythm(self.ws)
+        n, t = r["streak"], r["target"]
+        if n:
+            self.streak_label.text = "%s in a rhythm" % state.plural(n, "week") + (
+                " · %s" % state.plural(r["rests"], "rest week") if r["rests"] else "")
+        elif r["any"]:
+            self.streak_label.text = "This week: %d of %d. Hit it to start a streak." % (r["this_week"], t)
+        else:
+            self.streak_label.text = "Post this week to start your rhythm."
+        self.streak_note.text = ("A week counts when you post %s (your target). One missed week in four is a free rest "
+                                 "week, so a busy week doesn't break it. This week so far: %d." % (
+                                     state.plural(t, "time"), r["this_week"]))
+        box = self.dom_nodes["weeks_dots"]
+        box.innerHTML = ""
+        for d in r["dots"]:
+            dot = hl.loose(window.document.createElement("i"))
+            dot.className = d["state"]
+            dot.title = "Week of %s: %d posted" % (hl.fmt_date(d["key"], {"day": "numeric", "month": "short"}), d["n"])
+            box.appendChild(dot)
+        on = len([d for d in r["dots"] if d["state"] == "on"])
+        rest = len([d for d in r["dots"] if d["state"] == "rest"])
+        box.setAttribute("aria-label", "Last 8 weeks: %d on target%s" % (on, (", %s" % state.plural(rest, "rest week")) if rest else ""))
+
+    @handle("recap_button", "click")
+    def recap_button_click(self, **event_args):
+        from ...Dialogs.Recap import Recap
+        alert(Recap(ws=self.ws, year=self.year, month=self.month), buttons=[], role=["app-dialog", "wide"], large=True)
 
     def _move(self, n):
         if n == 0:

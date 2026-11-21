@@ -52,6 +52,7 @@
             <anvil-component type="Button" name="save_button" prop:text="Save" prop:role='["btn", "btn-primary", "ic-check"]'></anvil-component>
             <anvil-component type="Button" name="schedule_button" prop:text="Schedule" prop:role='["btn", "ic-calendar"]'></anvil-component>
             <anvil-component type="Button" name="post_button" prop:text="Post on LinkedIn" prop:role='["btn", "btn-gold", "ic-send"]'></anvil-component>
+            <anvil-component type="Button" name="launch_button" prop:text="First hour" prop:role='["btn", "btn-gold", "ic-flame"]'></anvil-component>
             <anvil-component type="Button" name="metrics_button" prop:text="Results" prop:role='["btn", "ic-chart"]'></anvil-component>
             <span class="ui-spacer"></span>
             <anvil-component type="Button" name="markposted_button" prop:text="Mark as posted" prop:role='["btn", "btn-ghost", "btn-sm"]'></anvil-component>
@@ -80,6 +81,17 @@
               </div>
             </div>
             <anvil-component type="RepeatingPanel" name="checks_panel" prop:item_template="Hookline.Items.Check" prop:role='["hl-checks"]'></anvil-component>
+          </div>
+          <div class="ui-card st-voice">
+            <div class="st-score">
+              <anvil-component type="Hookline.Components.ScoreRing" name="voice_ring"></anvil-component>
+              <div>
+                <anvil-component type="Label" name="voice_title" prop:text="Sounds like you" prop:role='["st-h"]'></anvil-component>
+                <anvil-component type="Label" name="voice_text" prop:role='["fine-print"]'></anvil-component>
+              </div>
+            </div>
+            <p class="small muted st-voice-note" anvil:name="voice_note">Paste 3 or more of your past posts in <a href="#voice/voice">Voice</a> and Hookline compares every draft with how you really write.</p>
+            <anvil-component type="RepeatingPanel" name="voice_panel" prop:item_template="Hookline.Items.Check" prop:role='["hl-checks"]'></anvil-component>
           </div>
         </aside>
       </div>

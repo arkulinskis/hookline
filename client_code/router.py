@@ -25,6 +25,7 @@ PAGES = {
     "lab": ("user", "Lab"),
     "voice": ("user", "Voice & settings"),
     "carousel": ("user", "Carousel"),
+    "launch": ("user", "First hour"),
     "profile": ("user", "Your profile"),
     "admin": ("admin", "Admin"),
 }
@@ -67,6 +68,9 @@ def _form(name):
     if name == "carousel":
         from .Pages.Carousel import Carousel
         return Carousel
+    if name == "launch":
+        from .Pages.Launch import Launch
+        return Launch
     if name == "profile":
         from .Pages.Profile import Profile
         return Profile

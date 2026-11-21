@@ -93,6 +93,12 @@ def voice_summary(stats):
     return str(window.HL.py.voiceSummary(json.dumps(stats))) if stats else ""
 
 
+def voice_match(text, voice):
+    """'Sounds like you': the draft against the person's past posts and banned words, plus AI-ish patterns.
+    {score, ready (3+ samples saved), samples, items: [{level, title, text}]}"""
+    return json.loads(window.HL.py.voiceMatch(text or "", json.dumps(voice or {})))
+
+
 # ---------------------------------------------------------------- numbers and dates (browser locale, like before)
 def fmt_num(n):
     return str(window.HL.fmtNum(n or 0))
@@ -150,6 +156,58 @@ def due(ws, but=None):
     limit = now_ms() + 15 * 60000
     return [p for p in ws["posts"] if p.get("status") == "scheduled" and p.get("scheduled_at")
             and time_ms(p["scheduled_at"]) <= limit and p.get("id") != but]
+
+
+def week_key(iso):
+    """The Monday (local, 'YYYY-MM-DD') of the week an ISO time falls in."""
+    d = window.Date(iso)
+    monday = window.Date(d.getFullYear(), d.getMonth(), int(d.getDate()) - (int(d.getDay()) + 6) % 7, 12)
+    return day_key(monday.toISOString())
+
+
+def rhythm(ws_):
+    """The weekly rhythm (2026-11-20): weeks in a row that hit the posting target, where one missed week in any four
+    is a free rest week (daily streaks burn people out). The current week never breaks it: it isn't over yet.
+    {streak, rests, target, this_week, any, counts: {monday: n}, dots: [{key, state: on|rest|off|now}] oldest first}"""
+    target = max(1, int((ws_.get("profile") or {}).get("cadence") or 3))
+    counts: dict = {}
+    first = None
+    for p in ws_.get("posts") or []:
+        if p.get("status") == "posted" and p.get("posted_at"):
+            k = week_key(p["posted_at"])
+            counts[k] = counts.get(k, 0) + 1
+            first = k if first is None or k < first else first
+    now = window.Date()
+    start = window.Date(now.getFullYear(), now.getMonth(), int(now.getDate()) - (int(now.getDay()) + 6) % 7, 12)
+
+    def key(i):
+        return day_key(window.Date(start.getFullYear(), start.getMonth(), int(start.getDate()) - 7 * i, 12).toISOString())
+
+    streak, rest_weeks, pending, last_rest = 0, [], None, None
+    for i in range(104):
+        k = key(i)
+        if counts.get(k, 0) >= target:
+            streak += 1
+            if pending is not None:
+                rest_weeks.append(pending)
+                last_rest, pending = pending, None
+            continue
+        if i == 0:
+            continue
+        if pending is not None or first is None or k < first:
+            break
+        if last_rest is None or i - last_rest >= 4:
+            pending = i
+            continue
+        break
+    dots = []
+    for i in range(7, -1, -1):
+        k = key(i)
+        met = counts.get(k, 0) >= target
+        state_ = "on" if met else "now" if i == 0 else "rest" if i in rest_weeks else "off"
+        dots.append({"key": k, "state": state_, "n": counts.get(k, 0)})
+    return {"streak": streak, "rests": len(rest_weeks), "target": target, "this_week": counts.get(key(0), 0),
+            "any": first is not None, "counts": counts, "dots": dots}
 
 
 def pillar(ws, pid):

@@ -1,0 +1,27 @@
+<div class="ui">
+  <div class="dlg rc">
+    <h2 anvil:dom-node="title">Month recap</h2>
+    <p class="muted small">A card of your month to share on LinkedIn, or just to keep. Made in your browser.</p>
+    <div class="rc-grid" anvil:name="card_part">
+      <div class="rc-prev"><canvas anvil:dom-node="canvas" role="img" aria-label="Your month recap card"></canvas></div>
+      <div class="rc-side">
+        <label class="ui-field"><span>Caption</span>
+          <anvil-component type="TextArea" name="caption_box"></anvil-component>
+        </label>
+        <div class="ui-row">
+          <anvil-component type="Button" name="png_button" prop:text="Download PNG" prop:role='["btn", "btn-primary", "ic-download"]'></anvil-component>
+          <anvil-component type="Button" name="copy_button" prop:text="Copy caption" prop:role='["btn", "ic-copy"]'></anvil-component>
+        </div>
+        <p class="small faint">Post it as an image from LinkedIn's share box. Hookline never posts for you.</p>
+      </div>
+    </div>
+    <div class="ui-empty rc-empty" anvil:name="empty_part">
+      <i class="ic ic-calendar"></i>
+      <h3 anvil:dom-node="empty_title">Nothing posted this month yet</h3>
+      <p>Mark posts as posted and they show up here, with your results.</p>
+    </div>
+    <div class="ui-row end dlg-acts">
+      <anvil-component type="Button" name="close_button" prop:text="Close" prop:role='["btn", "btn-ghost"]'></anvil-component>
+    </div>
+  </div>
+</div>

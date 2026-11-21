@@ -1,0 +1,52 @@
+<anvil-form layout="Hookline.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ui-wrap ls">
+      <div class="ui-page-head">
+        <div>
+          <anvil-component type="Label" name="page_title" prop:text="The first hour" prop:role='["page-title"]'></anvil-component>
+          <anvil-component type="Label" name="hook_label" prop:role='["page-sub"]'></anvil-component>
+        </div>
+        <a class="ui-btn" href="#posts"><i class="ic ic-list"></i>All posts</a>
+      </div>
+
+      <div class="ui-empty" anvil:name="missing_part">
+        <i class="ic ic-flame"></i>
+        <h2 anvil:dom-node="missing_title">That post isn’t here</h2>
+        <p anvil:dom-node="missing_text">It may have been deleted. All your posts are on the Posts page.</p>
+        <a class="ui-btn primary" href="#posts" anvil:dom-node="missing_link">Open Posts</a>
+      </div>
+
+      <div class="ls-grid" anvil:name="main_part">
+        <section class="ls-main">
+          <div class="ui-card ls-timer">
+            <div class="ls-clock">
+              <anvil-component type="Label" name="clock_label" prop:role='["ls-num"]'></anvil-component>
+              <anvil-component type="Label" name="phase_label" prop:role='["ls-phase"]'></anvil-component>
+            </div>
+            <div class="ls-track" aria-hidden="true"><i anvil:dom-node="track_fill"></i><span class="ls-m60"></span></div>
+            <div class="ls-scale" aria-hidden="true"><span>Posted</span><span>60 min</span><span>90 min</span></div>
+          </div>
+          <div class="ui-card">
+            <div class="ui-row between">
+              <h2 class="st-h">Your checklist</h2>
+              <anvil-component type="Label" name="done_label" prop:role='["fine-print"]'></anvil-component>
+            </div>
+            <anvil-component type="RepeatingPanel" name="steps_panel" prop:item_template="Hookline.Items.LaunchStep" prop:role='["ls-steps"]'></anvil-component>
+          </div>
+        </section>
+        <aside class="ls-side">
+          <div class="ui-card">
+            <h2 class="st-h">Reply starters</h2>
+            <p class="small muted">Fill in the brackets with what they actually said. A question back keeps the conversation going.</p>
+            <anvil-component type="RepeatingPanel" name="starters_panel" prop:item_template="Hookline.Items.Starter" prop:role='["ls-starters"]'></anvil-component>
+          </div>
+          <div class="ui-card">
+            <h2 class="st-h">Why the first hour?</h2>
+            <p class="small muted">LinkedIn first shows a new post to a small group. Comments, and replies that turn into conversations, count for more than likes, so the post reaches more people.</p>
+            <p class="small muted">Hookline never comments or replies for you. LinkedIn’s rules forbid automation, and real replies are what work.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

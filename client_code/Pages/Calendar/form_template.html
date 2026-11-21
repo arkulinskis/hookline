@@ -22,6 +22,13 @@
           </div>
         </div>
         <aside class="cl-side">
+          <div class="ui-card cl-rhythm">
+            <h2 class="cl-h"><i class="ic ic-flame" aria-hidden="true"></i>Your rhythm</h2>
+            <anvil-component type="Label" name="streak_label" prop:role='["cl-streak"]'></anvil-component>
+            <div class="cl-weeks" anvil:dom-node="weeks_dots" role="img"></div>
+            <anvil-component type="Label" name="streak_note" prop:role='["fine-print"]'></anvil-component>
+            <anvil-component type="Button" name="recap_button" prop:text="Month recap" prop:role='["btn", "btn-sm", "ic-download"]'></anvil-component>
+          </div>
           <div class="ui-card">
             <h2 class="cl-h">Drafts to place</h2>
             <p class="small muted" anvil:name="drafts_hint">Drag one onto a day, or press the clock.</p>

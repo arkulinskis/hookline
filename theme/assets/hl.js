@@ -304,6 +304,67 @@
       hook_chars: Math.round(avg(function (p) { return HL.hook(p).length; }))
     };
   };
+  /* "Sounds like you" (2026-11-20): a draft compared with the person's own past posts (voice.samples / voice.stats)
+     and their banned words, plus writing patterns readers now read as AI. LinkedIn shows generic posts less and says
+     AI help is fine as long as the post sounds like the person. -> {score, ready, samples, items: [{level, title, text}]} */
+  HL.AI_TELLS = [
+    [/\bit'?s not (just )?(about )?[^.\n?!]{2,40}[,;:—–-]\s*it'?s\b/i, '“It’s not X, it’s Y”'],
+    [/\bnot (just )?[^.\n,?!]{2,30}, but (rather )?\b/i, '“Not X, but Y”'],
+    [/^\s*here'?s (why|how|the thing|what (happened|i learned)|the truth)\b[^\n]{0,30}:\s*$/im, '“Here’s why:”'],
+    [/\b(in conclusion|in summary|to sum up|all in all)\b/i, '“In conclusion”'],
+    [/\b(the (real )?kicker|plot twist:|spoiler( alert)?:)/i, '“The kicker”'],
+    [/\b(no fluff|let'?s dive in|without further ado|let'?s break it down)\b/i, '“Let’s dive in”'],
+    [/\b(imagine this|picture this)\b/i, '“Picture this”'],
+    [/\b(the result\?|the lesson\?|the takeaway\?)\s/i, '“The result?”'],
+    [/\b(fostering|empowering|leveraging|navigating|unlocking)\b/i, 'Corporate -ing words']
+  ];
+  HL.voiceMatch = function (text, voice) {
+    var t = String(text || ''), v = voice || {}, items = [], add = function (level, title, txt) { items.push({ level: level, title: title, text: txt || '' }); };
+    var samples = (v.samples || []).filter(function (s) { return s && String(s).trim(); });
+    var st = samples.length >= 3 ? (HL.voiceStats(samples) || null) : null;
+    if (!t.trim()) return { score: 0, ready: !!st, samples: samples.length, items: [] };
+    var low = t.toLowerCase();
+    var banned = (v.banned || []).map(function (w) { return String(w || '').trim(); }).filter(Boolean);
+    var used = banned.filter(function (w) {
+      var e = w.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return new RegExp('(^|[^\\wÀ-ÿ])' + e + '($|[^\\wÀ-ÿ])', 'i').test(low);
+    });
+    if (used.length) add('warn', 'A word you never use', 'Your banned list says no to “' + used.slice(0, 4).join('”, “') + '”.');
+    var tells = HL.AI_TELLS.filter(function (r) { return r[0].test(t); }).map(function (r) { return r[1]; });
+    if (tells.length >= 2) add('warn', 'Reads like AI', 'Patterns readers now spot: ' + tells.slice(0, 3).join(', ') + '. Say it the way you’d say it to a friend.');
+    else if (tells.length) add('tip', 'One AI-ish pattern', tells[0] + ' is a pattern people now link with AI writing. Rephrase it in your own words.');
+    var triads = (t.match(/\b[\wÀ-ÿ'’-]+(?: [\wÀ-ÿ'’-]+){0,2}, [\wÀ-ÿ'’-]+(?: [\wÀ-ÿ'’-]+){0,2},? and [\wÀ-ÿ'’-]+(?: [\wÀ-ÿ'’-]+){0,2}[.!]/g) || []).length;
+    if (triads >= 2) add('tip', triads + ' lists of three', '“Fast, simple, and powerful” rhythms everywhere sound generated. Keep the one that matters.');
+    var sents = HL.sentences(t), lens = sents.map(function (s) { return HL.words(s).length; }).filter(function (n) { return n > 0; });
+    if (lens.length >= 6) {
+      var mean = lens.reduce(function (a, b) { return a + b; }, 0) / lens.length;
+      var sd = Math.sqrt(lens.reduce(function (a, b) { return a + (b - mean) * (b - mean); }, 0) / lens.length);
+      if (mean > 6 && sd / mean < 0.28) add('tip', 'Every sentence is the same length', 'People write in bursts: a short line, then a longer one. Break the beat once or twice.');
+    }
+    if (st) {
+      var words = HL.words(t), avgLen = lens.length ? Math.round(10 * words.length / lens.length) / 10 : 0;
+      if (lens.length >= 3 && st.sentence_words && avgLen > st.sentence_words * 1.5 && avgLen - st.sentence_words >= 5)
+        add('warn', 'Longer sentences than yours', 'About ' + avgLen + ' words each here; you usually write ' + st.sentence_words + '.');
+      else if (lens.length >= 3 && st.sentence_words && avgLen < st.sentence_words * 0.6 && st.sentence_words - avgLen >= 4)
+        add('tip', 'Choppier than you usually write', 'About ' + avgLen + ' words a sentence here; yours average ' + st.sentence_words + '.');
+      var em = (t.match(EMOJI) || []).length;
+      if (em > st.emoji + 3) add('tip', 'More emoji than usual', em + ' here; your posts have about ' + st.emoji + '.');
+      var tags = (t.match(/(^|\s)#[\wÀ-ÿ]+/g) || []).length;
+      if (tags > st.hashtags + 2) add('tip', 'More hashtags than usual', tags + ' here; you usually use ' + st.hashtags + '.');
+      var hk = HL.hook(t).length;
+      if (st.hook_chars && hk > 60 && hk > st.hook_chars * 1.6) add('tip', 'A longer first line than yours', hk + ' characters; your hooks are about ' + st.hook_chars + '.');
+      var fp = words.length >= 40 ? Math.round(100 * (low.match(/\b(i|my|me)\b/g) || []).length / words.length) : null;
+      if (fp != null && st.first_person >= 3 && fp < st.first_person / 3) add('tip', 'Less “I” than usual', 'Your posts are usually personal. A line about what happened to you makes this one yours.');
+      var g = HL.grade(t);
+      if (g != null && st.grade && g > st.grade + 3) add('tip', 'Bigger words than usual', 'Reading grade ' + g + ' here; your posts read at about ' + st.grade + '.');
+    }
+    if (!items.length) add('good', st ? 'Sounds like you' : 'Sounds human', st ? 'Rhythm, length and habits match your past posts.' : 'No AI-ish patterns found.');
+    var score = 100;
+    items.forEach(function (i) { score -= { bad: 25, warn: 14, tip: 6, good: 0 }[i.level]; });
+    var order = { bad: 0, warn: 1, tip: 2, good: 3 };
+    items.sort(function (a, b) { return order[a.level] - order[b.level]; });
+    return { score: Math.max(0, Math.min(100, score)), ready: !!st, samples: samples.length, items: items };
+  };
   HL.voiceSummary = function (st) {
     if (!st) return '';
     var bits = [];
@@ -332,6 +393,7 @@
     foldCut: function (text, mode) { return JSON.stringify(HL.foldCut(text, mode)); },
     voiceStats: function (samplesJson) { return JSON.stringify(HL.voiceStats(JSON.parse(samplesJson)) || null); },
     voiceSummary: function (statsJson) { return HL.voiceSummary(JSON.parse(statsJson)); },
+    voiceMatch: function (text, voiceJson) { return JSON.stringify(HL.voiceMatch(text, JSON.parse(voiceJson || '{}'))); },
     sentences: function (text) { return JSON.stringify(HL.sentences(text)); },
     fancyCount: function (text) { var n = 0; for (var ch of String(text || '')) if (/[\u{1D400}-\u{1D7FF}]/u.test(ch)) n++; return n; },
     localInput: function (iso) { return HL.localInput(iso); },
